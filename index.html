@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#1f2937" />
-  <title>Калькулятор Плиссе — WEB + Mobile v4 PDF</title>
+  <title>Калькулятор Плиссе — WEB + Mobile v5 Top Panel</title>
   <style>
     :root{
       --bg:#f3f5f7; --card:#fff; --text:#111827; --muted:#6b7280;
@@ -14,7 +14,7 @@
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;font-size:14px}
     .wrap{max-width:1180px;margin:0 auto;padding:18px 18px 28px}
-    .top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+    .top{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:flex-start;margin-bottom:14px}
     h1{margin:0 0 5px;font-size:24px;line-height:1.2}.sub{color:var(--muted);font-size:13px}
     .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
     button{border:0;border-radius:9px;padding:10px 14px;cursor:pointer;font-weight:700;background:var(--accent);color:#fff;min-height:40px}
@@ -32,8 +32,8 @@
     input.cell{width:100%;height:30px;border:1px solid transparent;border-radius:5px;text-align:center;font-size:14px;background:transparent;padding:4px}
     input.cell:focus{outline:2px solid rgba(37,99,235,.25);border-color:var(--accent);background:#fff}.readonly{background:#f9fafb;font-weight:700}.money{font-weight:700}
     tfoot td{background:#f3f4f6;font-weight:800}
-    .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;border-top:1px solid var(--line)}
-    .box{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fff}.box .label{font-size:12px;color:var(--muted);margin-bottom:4px}.box .value{font-size:22px;font-weight:800}
+    .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}.summary.bottom-summary{display:none}
+    .box{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04)}.box .label{font-size:12px;color:var(--muted);margin-bottom:4px}.box .value{font-size:22px;font-weight:800}
     .note{padding:0 14px 14px;color:var(--muted);font-size:12px;line-height:1.45}
     .items{display:flex;flex-direction:column;gap:10px;padding:12px}.item{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 2px 7px rgba(0,0,0,.035)}
     .item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.item-num{font-weight:800}.mini-sum{font-size:17px;font-weight:800}
@@ -41,10 +41,10 @@
     .calc{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.calcbox{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:10px}.calcbox .label{font-size:12px;color:var(--muted);margin-bottom:3px}.calcbox .value{font-size:18px;font-weight:800}
     .mobile-bottom{display:none}
     @media (max-width: 991px){
-      body{font-size:16px}.wrap{max-width:640px;padding:12px 12px 96px}.top{position:sticky;top:0;z-index:10;margin:-12px -12px 12px;padding:14px 12px 12px;background:rgba(243,245,247,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:block}h1{font-size:21px}.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}.actions button{min-height:46px;border-radius:12px;font-size:15px;padding:12px 8px}.desktop-view{display:none}.mobile-view{display:block}.card{box-shadow:none;border-radius:16px}.info{grid-template-columns:1fr 1fr;padding:12px}.info input{font-size:17px;min-height:48px;border-radius:12px}.summary{display:none}.note{padding:0 14px 14px}.mobile-bottom{display:block;position:fixed;left:0;right:0;bottom:0;z-index:20;background:#fff;border-top:1px solid var(--line);box-shadow:0 -5px 18px rgba(0,0,0,.08);padding:10px 12px calc(10px + env(safe-area-inset-bottom))}.mobile-bottom-inner{max-width:640px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.sbox{background:#f3f4f6;border-radius:12px;padding:9px;text-align:center}.sbox .label{font-size:11px;color:var(--muted)}.sbox .value{font-size:17px;font-weight:800}.total-mobile{grid-column:span 3;background:#111827;color:#fff;border-radius:14px;padding:12px;text-align:center}.total-mobile .label{color:#d1d5db;font-size:12px}.total-mobile .value{font-size:26px;font-weight:900}
+      body{font-size:16px}.wrap{max-width:640px;padding:12px 12px 28px}.top{position:sticky;top:0;z-index:10;margin:-12px -12px 12px;padding:14px 12px 12px;background:rgba(243,245,247,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:block}h1{font-size:21px}.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}.actions button{min-height:46px;border-radius:12px;font-size:15px;padding:12px 8px}.desktop-view{display:none}.mobile-view{display:block}.card{box-shadow:none;border-radius:16px}.info{grid-template-columns:1fr 1fr;padding:12px}.info input{font-size:17px;min-height:48px;border-radius:12px}.summary{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.summary .box{padding:10px}.summary .box .value{font-size:18px}.summary .box.total-top{grid-column:span 2;background:#111827;color:#fff}.summary .box.total-top .label{color:#d1d5db}.summary.bottom-summary{display:none}.note{padding:0 14px 14px}.mobile-bottom{display:none!important}.mobile-bottom-inner{display:none}.sbox{background:#f3f4f6;border-radius:12px;padding:9px;text-align:center}.sbox .label{font-size:11px;color:var(--muted)}.sbox .value{font-size:17px;font-weight:800}.total-mobile{grid-column:span 3;background:#111827;color:#fff;border-radius:14px;padding:12px;text-align:center}.total-mobile .label{color:#d1d5db;font-size:12px}.total-mobile .value{font-size:26px;font-weight:900}
     }
-    @media(max-width:380px){.fields{grid-template-columns:1fr 1fr}.fields .price-wrap{grid-column:span 2}.actions{grid-template-columns:1fr 1fr}.actions .danger{grid-column:span 2}.mobile-bottom-inner{grid-template-columns:1fr 1fr}.total-mobile{grid-column:span 2}}
-    @media print{body{background:#fff}.wrap{max-width:none;padding:0}.top{position:static;margin:0;padding:0;border:0;background:#fff}.actions,.mobile-view,.mobile-bottom,.note{display:none!important}.desktop-view{display:block}.card{border:0;box-shadow:none;border-radius:0}.info{grid-template-columns:repeat(4,1fr)}th{position:static;background:#fff;color:#000}input{border:0!important} .table-wrap{overflow:visible} table{min-width:0;font-size:11px} th,td{height:26px;padding:3px}.summary{display:grid;page-break-inside:avoid}}
+    @media(max-width:380px){.fields{grid-template-columns:1fr 1fr}.fields .price-wrap{grid-column:span 2}.actions{grid-template-columns:1fr 1fr}.actions .danger{grid-column:span 2}.summary{grid-template-columns:1fr}.summary .box.total-top{grid-column:span 1}}
+    @media print{body{background:#fff}.wrap{max-width:none;padding:0}.top{position:static;margin:0 0 8px;padding:0;border:0;background:#fff}.actions,.mobile-view,.mobile-bottom,.note{display:none!important}.desktop-view{display:block}.card{border:0;box-shadow:none;border-radius:0}.info{grid-template-columns:repeat(4,1fr)}th{position:static;background:#fff;color:#000}input{border:0!important} .table-wrap{overflow:visible} table{min-width:0;font-size:11px} th,td{height:26px;padding:3px}.summary{display:grid;page-break-inside:avoid}.summary.bottom-summary{display:none!important}}
   </style>
 </head>
 <body>
@@ -52,6 +52,12 @@
     <div class="top">
       <div><h1>Калькулятор Плиссе</h1><div class="sub">Один файл: WEB-версия для компьютера и мобильная версия для iOS / Android</div></div>
       <div class="actions" id="mainActions"><button class="secondary" onclick="savePdf()">Сохранить в PDF</button><button class="secondary" onclick="sharePdf()">Поделиться PDF</button><button class="danger" onclick="clearAll()">Очистить</button></div>
+    </div>
+    <div class="summary top-summary">
+      <div class="box"><div class="label">Всего изделий</div><div class="value" id="itemsCount">0</div></div>
+      <div class="box"><div class="label">Общая квадратура</div><div class="value"><span id="areaTotal">0.00</span> м²</div></div>
+      <div class="box"><div class="label">К расчету по минимуму 1 м²</div><div class="value"><span id="billableAreaTotal">0.00</span> м²</div></div>
+      <div class="box total-top"><div class="label">Итого</div><div class="value"><span id="totalBox">0</span> сом</div></div>
     </div>
     <div class="card">
       <div class="info">
@@ -64,21 +70,8 @@
         <div class="table-wrap"><table id="calcTable"><thead><tr><th>№</th><th>Ширина, см</th><th>Длина, см</th><th>Квадратура, м²</th><th>Цена/м²</th><th>Сумма</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="5">Итого</td><td id="grandTotal">0</td></tr></tfoot></table></div>
       </div>
       <div class="mobile-view"><div class="items" id="items"></div></div>
-      <div class="summary">
-        <div class="box"><div class="label">Всего изделий</div><div class="value" id="itemsCount">0</div></div>
-        <div class="box"><div class="label">Общая квадратура</div><div class="value"><span id="areaTotal">0.00</span> м²</div></div>
-        <div class="box"><div class="label">К расчету по минимуму 1 м²</div><div class="value"><span id="billableAreaTotal">0.00</span> м²</div></div>
-        <div class="box"><div class="label">Общая сумма</div><div class="value"><span id="totalBox">0</span> сом</div></div>
-      </div>
+
       <div class="note">Формула как в Excel: квадратура = ширина × длина / 10000. Сумма = MAX(квадратура, 1) × цена/м². Если изделие меньше 1 м², расчет идет как за 1 м².</div>
-    </div>
-  </div>
-  <div class="mobile-bottom">
-    <div class="mobile-bottom-inner">
-      <div class="sbox"><div class="label">Изделий</div><div class="value" id="mItemsCount">0</div></div>
-      <div class="sbox"><div class="label">Площадь</div><div class="value"><span id="mAreaTotal">0.00</span> м²</div></div>
-      <div class="sbox"><div class="label">К расчету</div><div class="value"><span id="mBillableAreaTotal">0.00</span> м²</div></div>
-      <div class="total-mobile"><div class="label">Итого</div><div class="value"><span id="mTotalBox">0</span> сом</div></div>
     </div>
   </div>
 <script>
@@ -91,7 +84,7 @@ function makeDesktopRow(i){const tr=document.createElement('tr');tr.innerHTML=`<
 function makeMobileCard(i){const div=document.createElement('div');div.className='item';div.innerHTML=`<div class="item-head"><div class="item-num">Изделие №${i}</div><div class="mini-sum"><span class="sum" data-i="${i-1}">0</span> сом</div></div><div class="fields"><div><label>Ширина, см</label><input data-i="${i-1}" data-k="w" inputmode="decimal" autocomplete="off"></div><div><label>Длина, см</label><input data-i="${i-1}" data-k="l" inputmode="decimal" autocomplete="off"></div><div class="price-wrap"><label>Цена/м²</label><input data-i="${i-1}" data-k="p" inputmode="decimal" autocomplete="off"></div></div><div class="calc"><div class="calcbox"><div class="label">Квадратура</div><div class="value"><span class="area" data-i="${i-1}">0.00</span> м²</div></div><div class="calcbox"><div class="label">К расчету</div><div class="value"><span class="billable" data-i="${i-1}">0.00</span> м²</div></div></div>`;$('items').appendChild(div)}
 for(let i=1;i<=ROWS;i++){makeDesktopRow(i);makeMobileCard(i)}
 function syncInputs(){document.querySelectorAll('input[data-i][data-k]').forEach(inp=>{const r=state.rows[+inp.dataset.i];const v=r[inp.dataset.k]||'';if(inp.value!==v) inp.value=v;});}
-function recalc(){let total=0,areaTotal=0,billableTotal=0,count=0;state.rows.forEach((r,i)=>{const w=num(r.w),l=num(r.l),p=num(r.p),has=w>0||l>0||p>0,area=w*l/10000,billable=has?Math.max(area,1):0,sum=billable*p;document.querySelectorAll(`.area[data-i="${i}"]`).forEach(e=>e.textContent=area?area.toFixed(2):'0.00');document.querySelectorAll(`.billable[data-i="${i}"]`).forEach(e=>e.textContent=billable?billable.toFixed(2):'0.00');document.querySelectorAll(`.sum[data-i="${i}"]`).forEach(e=>e.textContent=money(sum));total+=sum;areaTotal+=area;billableTotal+=billable;if(has)count++;});$('grandTotal').textContent=money(total);$('itemsCount').textContent=count;$('areaTotal').textContent=areaTotal.toFixed(2);$('billableAreaTotal').textContent=billableTotal.toFixed(2);$('totalBox').textContent=money(total);$('mItemsCount').textContent=count;$('mAreaTotal').textContent=areaTotal.toFixed(2);$('mBillableAreaTotal').textContent=billableTotal.toFixed(2);$('mTotalBox').textContent=money(total);}
+function recalc(){let total=0,areaTotal=0,billableTotal=0,count=0;state.rows.forEach((r,i)=>{const w=num(r.w),l=num(r.l),p=num(r.p),has=w>0||l>0||p>0,area=w*l/10000,billable=has?Math.max(area,1):0,sum=billable*p;document.querySelectorAll(`.area[data-i="${i}"]`).forEach(e=>e.textContent=area?area.toFixed(2):'0.00');document.querySelectorAll(`.billable[data-i="${i}"]`).forEach(e=>e.textContent=billable?billable.toFixed(2):'0.00');document.querySelectorAll(`.sum[data-i="${i}"]`).forEach(e=>e.textContent=money(sum));total+=sum;areaTotal+=area;billableTotal+=billable;if(has)count++;});$('grandTotal').textContent=money(total);$('itemsCount').textContent=count;$('areaTotal').textContent=areaTotal.toFixed(2);$('billableAreaTotal').textContent=billableTotal.toFixed(2);$('totalBox').textContent=money(total);}
 function collect(){return{client:$('client').value,order:$('order').value,date:$('date').value,manager:$('manager').value,rows:state.rows};}
 function apply(data){if(!data)return;$('client').value=data.client||'';$('order').value=data.order||'';$('date').value=data.date||new Date().toISOString().slice(0,10);$('manager').value=data.manager||'';state.rows=Array.from({length:ROWS},(_,i)=>{const r=(data.rows||[])[i]||{};return{w:r.w||'',l:r.l||'',p:r.p||''}});syncInputs();recalc();}
 function saveData(silent=false){localStorage.setItem(STORE,JSON.stringify(collect()));if(!silent)alert('Расчет сохранен в этом браузере.');}
