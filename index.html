@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#1f2937" />
-  <title>Калькулятор Плиссе — WEB + Mobile v8 PDF Download Fix</title>
+  <title>Калькулятор Плиссе — WEB + Mobile v9 Centered Cells</title>
   <style>
     :root{
       --bg:#f3f5f7; --card:#fff; --text:#111827; --muted:#6b7280;
@@ -22,23 +22,23 @@
     .card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.04);overflow:hidden}
     .info{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;border-bottom:1px solid var(--line)}
     .field label{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}
-    input{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px;font-size:14px;background:#fff}
+    input{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px;font-size:14px;background:#fff;text-align:center}
     input:focus{outline:3px solid rgba(37,99,235,.18);border-color:var(--accent)}
     .desktop-view{display:block}.mobile-view{display:none}
     .table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:850px}
-    th,td{border:1px solid var(--line);padding:6px;text-align:center;height:38px}
+    th,td{border:1px solid var(--line);padding:6px;text-align:center;vertical-align:middle;height:38px}
     th{background:var(--head);color:var(--headText);font-size:13px;position:sticky;top:0;z-index:1}
     td.num{width:44px;color:var(--muted);background:#f9fafb}
     input.cell{width:100%;height:30px;border:1px solid transparent;border-radius:5px;text-align:center;font-size:14px;background:transparent;padding:4px}
-    input.cell:focus{outline:2px solid rgba(37,99,235,.25);border-color:var(--accent);background:#fff}.readonly{background:#f9fafb;font-weight:700}.money{font-weight:700}
+    input.cell:focus{outline:2px solid rgba(37,99,235,.25);border-color:var(--accent);background:#fff}.readonly{background:#f9fafb;font-weight:700;text-align:center;vertical-align:middle}.money{font-weight:700;text-align:center}
     tfoot td{background:#f3f4f6;font-weight:800}
     .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}.summary.bottom-summary{display:none}
-    .box{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04)}.box .label{font-size:12px;color:var(--muted);margin-bottom:4px}.box .value{font-size:22px;font-weight:800}
+    .box{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04);text-align:center}.box .label{font-size:12px;color:var(--muted);margin-bottom:4px}.box .value{font-size:22px;font-weight:800}
     .note{padding:0 14px 14px;color:var(--muted);font-size:12px;line-height:1.45}
     .items{display:flex;flex-direction:column;gap:10px;padding:12px}.item{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 2px 7px rgba(0,0,0,.035)}
     .item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.item-num{font-weight:800}.mini-sum{font-size:17px;font-weight:800}
-    .fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.fields label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}.fields input{padding:13px 11px;font-size:17px;min-height:48px;border-radius:12px}
-    .calc{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.calcbox{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:10px}.calcbox .label{font-size:12px;color:var(--muted);margin-bottom:3px}.calcbox .value{font-size:18px;font-weight:800}
+    .fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.fields label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px;text-align:center}.fields input{padding:13px 11px;font-size:17px;min-height:48px;border-radius:12px;text-align:center}
+    .calc{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.calcbox{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}.calcbox .label{font-size:12px;color:var(--muted);margin-bottom:3px;text-align:center}.calcbox .value{font-size:18px;font-weight:800;text-align:center}
     .mobile-bottom{display:none}
     @media (max-width: 991px){
       body{font-size:16px}.wrap{max-width:640px;padding:12px 12px 28px}.top{position:sticky;top:0;z-index:10;margin:-12px -12px 12px;padding:14px 12px 12px;background:rgba(243,245,247,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:block}h1{font-size:21px}.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}.actions button{min-height:46px;border-radius:12px;font-size:15px;padding:12px 8px}.desktop-view{display:none}.mobile-view{display:block}.card{box-shadow:none;border-radius:16px}.info{grid-template-columns:1fr 1fr;padding:12px}.info input{font-size:17px;min-height:48px;border-radius:12px}.summary{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.summary .box{padding:10px}.summary .box .value{font-size:18px}.summary .box.total-top{grid-column:span 2;background:#111827;color:#fff}.summary .box.total-top .label{color:#d1d5db}.summary.bottom-summary{display:none}.note{padding:0 14px 14px}.mobile-bottom{display:none!important}.mobile-bottom-inner{display:none}.sbox{background:#f3f4f6;border-radius:12px;padding:9px;text-align:center}.sbox .label{font-size:11px;color:var(--muted)}.sbox .value{font-size:17px;font-weight:800}.total-mobile{grid-column:span 3;background:#111827;color:#fff;border-radius:14px;padding:12px;text-align:center}.total-mobile .label{color:#d1d5db;font-size:12px}.total-mobile .value{font-size:26px;font-weight:900}
