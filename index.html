@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#1f2937" />
-  <title>Калькулятор Плиссе — WEB + Mobile v5 Top Panel</title>
+  <title>Калькулятор Плиссе — WEB + Mobile v6 No Bottom Footer</title>
   <style>
     :root{
       --bg:#f3f5f7; --card:#fff; --text:#111827; --muted:#6b7280;
@@ -67,7 +67,7 @@
         <div class="field"><label>Менеджер</label><input id="manager" placeholder="Имя менеджера"></div>
       </div>
       <div class="desktop-view">
-        <div class="table-wrap"><table id="calcTable"><thead><tr><th>№</th><th>Ширина, см</th><th>Длина, см</th><th>Квадратура, м²</th><th>Цена/м²</th><th>Сумма</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="5">Итого</td><td id="grandTotal">0</td></tr></tfoot></table></div>
+        <div class="table-wrap"><table id="calcTable"><thead><tr><th>№</th><th>Ширина, см</th><th>Длина, см</th><th>Квадратура, м²</th><th>Цена/м²</th><th>Сумма</th></tr></thead><tbody></tbody></table></div>
       </div>
       <div class="mobile-view"><div class="items" id="items"></div></div>
 
@@ -84,7 +84,7 @@ function makeDesktopRow(i){const tr=document.createElement('tr');tr.innerHTML=`<
 function makeMobileCard(i){const div=document.createElement('div');div.className='item';div.innerHTML=`<div class="item-head"><div class="item-num">Изделие №${i}</div><div class="mini-sum"><span class="sum" data-i="${i-1}">0</span> сом</div></div><div class="fields"><div><label>Ширина, см</label><input data-i="${i-1}" data-k="w" inputmode="decimal" autocomplete="off"></div><div><label>Длина, см</label><input data-i="${i-1}" data-k="l" inputmode="decimal" autocomplete="off"></div><div class="price-wrap"><label>Цена/м²</label><input data-i="${i-1}" data-k="p" inputmode="decimal" autocomplete="off"></div></div><div class="calc"><div class="calcbox"><div class="label">Квадратура</div><div class="value"><span class="area" data-i="${i-1}">0.00</span> м²</div></div><div class="calcbox"><div class="label">К расчету</div><div class="value"><span class="billable" data-i="${i-1}">0.00</span> м²</div></div></div>`;$('items').appendChild(div)}
 for(let i=1;i<=ROWS;i++){makeDesktopRow(i);makeMobileCard(i)}
 function syncInputs(){document.querySelectorAll('input[data-i][data-k]').forEach(inp=>{const r=state.rows[+inp.dataset.i];const v=r[inp.dataset.k]||'';if(inp.value!==v) inp.value=v;});}
-function recalc(){let total=0,areaTotal=0,billableTotal=0,count=0;state.rows.forEach((r,i)=>{const w=num(r.w),l=num(r.l),p=num(r.p),has=w>0||l>0||p>0,area=w*l/10000,billable=has?Math.max(area,1):0,sum=billable*p;document.querySelectorAll(`.area[data-i="${i}"]`).forEach(e=>e.textContent=area?area.toFixed(2):'0.00');document.querySelectorAll(`.billable[data-i="${i}"]`).forEach(e=>e.textContent=billable?billable.toFixed(2):'0.00');document.querySelectorAll(`.sum[data-i="${i}"]`).forEach(e=>e.textContent=money(sum));total+=sum;areaTotal+=area;billableTotal+=billable;if(has)count++;});$('grandTotal').textContent=money(total);$('itemsCount').textContent=count;$('areaTotal').textContent=areaTotal.toFixed(2);$('billableAreaTotal').textContent=billableTotal.toFixed(2);$('totalBox').textContent=money(total);}
+function recalc(){let total=0,areaTotal=0,billableTotal=0,count=0;state.rows.forEach((r,i)=>{const w=num(r.w),l=num(r.l),p=num(r.p),has=w>0||l>0||p>0,area=w*l/10000,billable=has?Math.max(area,1):0,sum=billable*p;document.querySelectorAll(`.area[data-i="${i}"]`).forEach(e=>e.textContent=area?area.toFixed(2):'0.00');document.querySelectorAll(`.billable[data-i="${i}"]`).forEach(e=>e.textContent=billable?billable.toFixed(2):'0.00');document.querySelectorAll(`.sum[data-i="${i}"]`).forEach(e=>e.textContent=money(sum));total+=sum;areaTotal+=area;billableTotal+=billable;if(has)count++;});const gt=$('grandTotal'); if(gt) gt.textContent=money(total);$('itemsCount').textContent=count;$('areaTotal').textContent=areaTotal.toFixed(2);$('billableAreaTotal').textContent=billableTotal.toFixed(2);$('totalBox').textContent=money(total);}
 function collect(){return{client:$('client').value,order:$('order').value,date:$('date').value,manager:$('manager').value,rows:state.rows};}
 function apply(data){if(!data)return;$('client').value=data.client||'';$('order').value=data.order||'';$('date').value=data.date||new Date().toISOString().slice(0,10);$('manager').value=data.manager||'';state.rows=Array.from({length:ROWS},(_,i)=>{const r=(data.rows||[])[i]||{};return{w:r.w||'',l:r.l||'',p:r.p||''}});syncInputs();recalc();}
 function saveData(silent=false){localStorage.setItem(STORE,JSON.stringify(collect()));if(!silent)alert('Расчет сохранен в этом браузере.');}
