@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#1f2937" />
-  <title>Калькулятор Плиссе — WEB + Mobile</title>
+  <title>Калькулятор Плиссе — WEB + Mobile v2</title>
   <style>
     :root{
       --bg:#f3f5f7; --card:#fff; --text:#111827; --muted:#6b7280;
@@ -51,7 +51,7 @@
   <div class="wrap">
     <div class="top">
       <div><h1>Калькулятор Плиссе</h1><div class="sub">Один файл: WEB-версия для компьютера и мобильная версия для iOS / Android</div></div>
-      <div class="actions"><button class="secondary" onclick="savePdf()">Сохранить в PDF</button><button class="secondary" onclick="sharePdf()">Поделиться PDF</button><button class="danger" onclick="clearAll()">Очистить</button></div>
+      <div class="actions" id="mainActions"><button class="secondary" onclick="savePdf()">Сохранить в PDF</button><button class="secondary" onclick="sharePdf()">Поделиться PDF</button><button class="danger" onclick="clearAll()">Очистить</button></div>
     </div>
     <div class="card">
       <div class="info">
@@ -214,6 +214,13 @@ document.addEventListener('keydown',e=>{
 });
 document.addEventListener('input',e=>{if(e.target.matches('input[data-i][data-k]')){state.rows[+e.target.dataset.i][e.target.dataset.k]=e.target.value;syncInputs();recalc();}else if(e.target.matches('#client,#order,#date,#manager')){saveData(true);}});
 window.addEventListener('beforeunload',()=>saveData(true));
+
+function normalizeActionButtons(){
+  const actions=document.getElementById('mainActions');
+  if(!actions) return;
+  actions.innerHTML='<button class="secondary" onclick="savePdf()">Сохранить в PDF</button><button class="secondary" onclick="sharePdf()">Поделиться PDF</button><button class="danger" onclick="clearAll()">Очистить</button>';
+}
+normalizeActionButtons();
 $('date').valueAsDate=new Date();loadData(false);syncInputs();recalc();
 </script>
 </body>
