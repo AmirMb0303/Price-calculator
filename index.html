@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#1f2937" />
-  <title>Калькулятор Плиссе — WEB + Mobile v2</title>
+  <title>Калькулятор Плиссе — WEB + Mobile v3 PDF</title>
   <style>
     :root{
       --bg:#f3f5f7; --card:#fff; --text:#111827; --muted:#6b7280;
@@ -152,16 +152,18 @@ function dataUrlToBytes(dataUrl){
   for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
   return bytes;
 }
-function buildSingleImagePdf(jpegBytes, width, height){
+function buildSingleImagePdf(jpegBytes, imgWidth, imgHeight, pageWidth=595, pageHeight=842){
+  // Настоящий PDF: создается PDF-страница A4, а расчет вставляется как JPEG-изображение.
+  // Размер изображения и размер PDF-страницы разные, поэтому изображение масштабируется на страницу.
   const enc=new TextEncoder(); const parts=[]; let offset=0; const xref=[];
   function add(part){ if(typeof part==='string') part=enc.encode(part); parts.push(part); offset+=part.length; }
   function obj(n, bodyParts){ xref[n]=offset; add(`${n} 0 obj\n`); bodyParts.forEach(add); add(`\nendobj\n`); }
-  add('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
+  add('%PDF-1.4\n%PDF-BINARY\n');
   obj(1,[`<< /Type /Catalog /Pages 2 0 R >>`]);
   obj(2,[`<< /Type /Pages /Kids [3 0 R] /Count 1 >>`]);
-  obj(3,[`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${width} ${height}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>`]);
-  obj(4,[`<< /Type /XObject /Subtype /Image /Width ${width} /Height ${height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.length} >>\nstream\n`, jpegBytes, `\nendstream`]);
-  const stream=`q\n${width} 0 0 ${height} 0 0 cm\n/Im0 Do\nQ\n`;
+  obj(3,[`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth} ${pageHeight}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>`]);
+  obj(4,[`<< /Type /XObject /Subtype /Image /Width ${imgWidth} /Height ${imgHeight} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.length} >>\nstream\n`, jpegBytes, `\nendstream`]);
+  const stream=`q\n${pageWidth} 0 0 ${pageHeight} 0 0 cm\n/Im0 Do\nQ\n`;
   obj(5,[`<< /Length ${stream.length} >>\nstream\n${stream}endstream`]);
   const start=offset; add(`xref\n0 6\n0000000000 65535 f \n`);
   for(let i=1;i<=5;i++) add(String(xref[i]).padStart(10,'0')+' 00000 n \n');
@@ -171,16 +173,20 @@ function buildSingleImagePdf(jpegBytes, width, height){
 function createPdfBlob(){
   const canvas=drawPdfPage();
   const jpeg=dataUrlToBytes(canvas.toDataURL('image/jpeg',0.92));
-  return buildSingleImagePdf(jpeg,595,842);
+  return buildSingleImagePdf(jpeg,canvas.width,canvas.height,595,842);
 }
 function savePdf(){
   saveData(true);
   const blob=createPdfBlob();
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
-  a.href=url; a.download=pdfFileName(); document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  a.href=url;
+  a.download=pdfFileName().replace(/\.html?$/i,'.pdf').replace(/\.pdf$/i,'.pdf');
+  a.type='application/pdf';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
 }
+
 async function sharePdf(){
   saveData(true);
   const blob=createPdfBlob();
