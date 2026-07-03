@@ -97,6 +97,23 @@ function apply(data){if(!data)return;$('client').value=data.client||'';$('order'
 function saveData(silent=false){localStorage.setItem(STORE,JSON.stringify(collect()));if(!silent)alert('Расчет сохранен в этом браузере.');}
 function loadData(showAlert=false){const raw=localStorage.getItem(STORE);if(raw){apply(JSON.parse(raw));if(showAlert)alert('Сохраненный расчет загружен.');}}
 function clearAll(){if(!confirm('Очистить весь расчет?'))return;localStorage.removeItem(STORE);apply({date:new Date().toISOString().slice(0,10),rows:[]});}
+
+function isDesktopMode(){return window.matchMedia('(min-width: 992px)').matches;}
+function focusDesktopCell(rowIndex,key){
+  const next=document.querySelector(`.desktop-view input.cell[data-i="${rowIndex}"][data-k="${key}"]`);
+  if(next){next.focus();next.select();}
+}
+document.addEventListener('keydown',e=>{
+  if(!isDesktopMode()) return;
+  const t=e.target;
+  if(!t.matches('.desktop-view input.cell[data-i][data-k]')) return;
+  if(e.key==='Enter'){
+    e.preventDefault();
+    const currentRow=Number(t.dataset.i);
+    const nextRow=Math.min(currentRow+1,ROWS-1);
+    focusDesktopCell(nextRow,t.dataset.k);
+  }
+});
 document.addEventListener('input',e=>{if(e.target.matches('input[data-i][data-k]')){state.rows[+e.target.dataset.i][e.target.dataset.k]=e.target.value;syncInputs();recalc();}else if(e.target.matches('#client,#order,#date,#manager')){saveData(true);}});
 window.addEventListener('beforeunload',()=>saveData(true));
 $('date').valueAsDate=new Date();loadData(false);syncInputs();recalc();
