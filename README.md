@@ -1,1 +1,130 @@
-# Price-calculator
+[plisse_sales_calculator_web.html](https://github.com/user-attachments/files/29620433/plisse_sales_calculator_web.html)
+# Price-calculator<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Калькулятор Плиссе — расчет стоимости</title>
+  <style>
+    :root{
+      --bg:#f4f6f8; --card:#ffffff; --text:#17202a; --muted:#6b7280;
+      --line:#cfd8e3; --head:#1f2937; --headText:#ffffff; --accent:#2563eb;
+      --ok:#e8f5e9; --warn:#fff7ed;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;font-size:14px}
+    .wrap{max-width:1180px;margin:0 auto;padding:18px}
+    .top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+    h1{margin:0 0 5px;font-size:24px;line-height:1.2}
+    .sub{color:var(--muted);font-size:13px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:700;background:var(--accent);color:#fff}
+    button.secondary{background:#e5e7eb;color:#111827}
+    button.danger{background:#dc2626;color:#fff}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.04);overflow:hidden}
+    .info{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;border-bottom:1px solid var(--line)}
+    .field label{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}
+    .field input{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px;font-size:14px;background:#fff}
+    .table-wrap{overflow:auto}
+    table{width:100%;border-collapse:collapse;min-width:850px}
+    th,td{border:1px solid var(--line);padding:6px;text-align:center;height:38px}
+    th{background:var(--head);color:var(--headText);font-size:13px;position:sticky;top:0;z-index:1}
+    td.num{width:44px;color:var(--muted);background:#f9fafb}
+    input.cell{width:100%;height:30px;border:1px solid transparent;border-radius:5px;text-align:center;font-size:14px;background:transparent}
+    input.cell:focus{outline:2px solid rgba(37,99,235,.25);border-color:var(--accent);background:#fff}
+    .readonly{background:#f9fafb;font-weight:700}
+    .money{font-weight:700}
+    tfoot td{background:#f3f4f6;font-weight:800}
+    .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;border-top:1px solid var(--line)}
+    .box{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fff}
+    .box .label{font-size:12px;color:var(--muted);margin-bottom:4px}.box .value{font-size:22px;font-weight:800}
+    .note{padding:0 14px 14px;color:var(--muted);font-size:12px;line-height:1.45}
+    @media (max-width:760px){.wrap{padding:10px}.top{display:block}.actions{justify-content:flex-start;margin-top:10px}.info,.summary{grid-template-columns:1fr 1fr}h1{font-size:20px}}
+    @media print{
+      body{background:#fff}.wrap{max-width:none;padding:0}.actions,.note{display:none}.card{border:0;box-shadow:none;border-radius:0}.info{grid-template-columns:repeat(4,1fr)}
+      th{position:static;background:#fff;color:#000} input{border:0!important} .table-wrap{overflow:visible} table{min-width:0;font-size:11px} th,td{height:26px;padding:3px}.summary{page-break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div><h1>Калькулятор Плиссе</h1><div class="sub">Веб-версия Excel-файла для расчета стоимости готовых изделий</div></div>
+      <div class="actions"><button onclick="window.print()">Печать</button><button class="secondary" onclick="saveData()">Сохранить</button><button class="secondary" onclick="loadData()">Загрузить</button><button class="danger" onclick="clearAll()">Очистить</button></div>
+    </div>
+    <div class="card">
+      <div class="info">
+        <div class="field"><label>Клиент</label><input id="client" placeholder="Имя клиента"></div>
+        <div class="field"><label>Номер заказа</label><input id="order" placeholder="№"></div>
+        <div class="field"><label>Дата</label><input id="date" type="date"></div>
+        <div class="field"><label>Менеджер</label><input id="manager" placeholder="Имя менеджера"></div>
+      </div>
+      <div class="table-wrap">
+        <table id="calcTable">
+          <thead><tr><th>№</th><th>Ширина, см</th><th>Длина, см</th><th>Квадратура, м²</th><th>Цена/м²</th><th>Сумма</th></tr></thead>
+          <tbody></tbody>
+          <tfoot><tr><td colspan="5">Итого</td><td id="grandTotal">0</td></tr></tfoot>
+        </table>
+      </div>
+      <div class="summary">
+        <div class="box"><div class="label">Всего изделий</div><div class="value" id="itemsCount">0</div></div>
+        <div class="box"><div class="label">Общая квадратура</div><div class="value"><span id="areaTotal">0.00</span> м²</div></div>
+        <div class="box"><div class="label">К расчету по минимуму 1 м²</div><div class="value"><span id="billableAreaTotal">0.00</span> м²</div></div>
+        <div class="box"><div class="label">Общая сумма</div><div class="value" id="totalBox">0</div></div>
+      </div>
+      <div class="note">Формула как в Excel: квадратура = ширина × длина / 10000. Сумма = MAX(квадратура, 1) × цена/м². Если изделие меньше 1 м², расчет идет как за 1 м².</div>
+    </div>
+  </div>
+<script>
+const ROWS = 29;
+const tbody = document.querySelector('#calcTable tbody');
+function money(n){return Number(n || 0).toLocaleString('ru-RU',{maximumFractionDigits:0});}
+function num(v){return parseFloat(String(v).replace(',','.')) || 0;}
+function makeRow(i){
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td class="num">${i}</td>
+    <td><input class="cell width" inputmode="decimal"></td>
+    <td><input class="cell length" inputmode="decimal"></td>
+    <td class="readonly area">0.00</td>
+    <td><input class="cell price" inputmode="decimal"></td>
+    <td class="readonly money sum">0</td>`;
+  tbody.appendChild(tr);
+}
+for(let i=1;i<=ROWS;i++) makeRow(i);
+function recalc(){
+  let total=0, areaTotal=0, billableTotal=0, count=0;
+  document.querySelectorAll('#calcTable tbody tr').forEach(tr=>{
+    const w=num(tr.querySelector('.width').value), l=num(tr.querySelector('.length').value), p=num(tr.querySelector('.price').value);
+    const area=(w*l)/10000;
+    const has=w>0 || l>0 || p>0;
+    const billable=has ? Math.max(area,1) : 0;
+    const sum=billable*p;
+    tr.querySelector('.area').textContent=area ? area.toFixed(2) : '0.00';
+    tr.querySelector('.sum').textContent=money(sum);
+    total+=sum; areaTotal+=area; billableTotal+=billable; if(has) count++;
+  });
+  document.getElementById('grandTotal').textContent=money(total);
+  document.getElementById('totalBox').textContent=money(total);
+  document.getElementById('areaTotal').textContent=areaTotal.toFixed(2);
+  document.getElementById('billableAreaTotal').textContent=billableTotal.toFixed(2);
+  document.getElementById('itemsCount').textContent=count;
+}
+document.addEventListener('input', recalc);
+document.getElementById('date').valueAsDate = new Date();
+function collect(){
+  return {client:client.value, order:order.value, date:date.value, manager:manager.value,
+    rows:[...document.querySelectorAll('#calcTable tbody tr')].map(tr=>({w:tr.querySelector('.width').value,l:tr.querySelector('.length').value,p:tr.querySelector('.price').value}))};
+}
+function apply(data){
+  if(!data) return;
+  client.value=data.client||''; order.value=data.order||''; date.value=data.date||''; manager.value=data.manager||'';
+  [...document.querySelectorAll('#calcTable tbody tr')].forEach((tr,i)=>{const r=(data.rows||[])[i]||{}; tr.querySelector('.width').value=r.w||''; tr.querySelector('.length').value=r.l||''; tr.querySelector('.price').value=r.p||'';});
+  recalc();
+}
+function saveData(){localStorage.setItem('plisseSalesCalc', JSON.stringify(collect())); alert('Расчет сохранен в этом браузере.');}
+function loadData(){apply(JSON.parse(localStorage.getItem('plisseSalesCalc')||'null'));}
+function clearAll(){if(!confirm('Очистить весь расчет?')) return; localStorage.removeItem('plisseSalesCalc'); apply({date:new Date().toISOString().slice(0,10), rows:[]});}
+recalc();
+</script>
+</body>
+</html>
