@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#1f2937" />
-  <title>Калькулятор Плиссе — WEB + Mobile v3 PDF</title>
+  <title>Калькулятор Плиссе — WEB + Mobile v4 PDF</title>
   <style>
     :root{
       --bg:#f3f5f7; --card:#fff; --text:#111827; --muted:#6b7280;
@@ -175,16 +175,35 @@ function createPdfBlob(){
   const jpeg=dataUrlToBytes(canvas.toDataURL('image/jpeg',0.92));
   return buildSingleImagePdf(jpeg,canvas.width,canvas.height,595,842);
 }
-function savePdf(){
-  saveData(true);
-  const blob=createPdfBlob();
+function isIOS(){return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);}
+function isAndroid(){return /Android/.test(navigator.userAgent);}
+function downloadPdfBlob(blob, filename){
+  const cleanName=(filename||'plisse_calculation.pdf').replace(/\.html?$/i,'.pdf').replace(/\.pdf$/i,'.pdf');
+  if(window.navigator && window.navigator.msSaveOrOpenBlob){ window.navigator.msSaveOrOpenBlob(blob, cleanName); return; }
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
-  a.href=url;
-  a.download=pdfFileName().replace(/\.html?$/i,'.pdf').replace(/\.pdf$/i,'.pdf');
-  a.type='application/pdf';
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),1500);
+  a.href=url; a.download=cleanName; a.rel='noopener'; a.type='application/pdf';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  // На iPhone/iPad атрибут download часто игнорируется. Поэтому открываем PDF в отдельной вкладке,
+  // чтобы его можно было сохранить или отправить через стандартное меню iOS.
+  if(isIOS()){
+    setTimeout(()=>{ window.open(url,'_blank'); },200);
+  }
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+async function savePdf(){
+  saveData(true);
+  const blob=createPdfBlob();
+  const filename=pdfFileName();
+  const file=new File([blob],filename,{type:'application/pdf'});
+  // На телефонах надежнее использовать системное меню: там файл уходит именно как application/pdf.
+  if((isIOS()||isAndroid()) && navigator.canShare && navigator.canShare({files:[file]}) && navigator.share){
+    try{ await navigator.share({title:'Калькулятор Плиссе',text:'PDF расчет стоимости плиссе',files:[file]}); return; }
+    catch(e){ if(e.name==='AbortError') return; }
+  }
+  downloadPdfBlob(blob,filename);
 }
 
 async function sharePdf(){
@@ -195,11 +214,8 @@ async function sharePdf(){
     try{ await navigator.share({title:'Калькулятор Плиссе',text:'PDF расчет стоимости плиссе',files:[file]}); return; }
     catch(e){ if(e.name==='AbortError') return; }
   }
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url; a.download=pdfFileName(); document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
-  alert('Браузер не поддерживает прямую отправку PDF. Файл сохранен — отправьте его через WhatsApp или Telegram вручную.');
+  downloadPdfBlob(blob,pdfFileName());
+  alert('Браузер не поддерживает прямую отправку PDF. Файл сохранен как PDF — отправьте его через WhatsApp или Telegram вручную.');
 }
 
 function isDesktopMode(){return window.matchMedia('(min-width: 992px)').matches;}
