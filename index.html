@@ -3,213 +3,824 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#1f2937" />
-  <title>Калькулятор Плиссе — один файл</title>
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Плиссе" />
+  <meta name="theme-color" content="#ffffff" />
+  <title>Сменное задание — Плиссе</title>
   <style>
-    :root{--bg:#f3f5f7;--card:#fff;--text:#111827;--muted:#6b7280;--line:#d7dee8;--head:#1f2937;--headText:#fff;--accent:#2563eb;--danger:#dc2626;--soft:#f9fafb;--ok:#16a34a}
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;font-size:14px}
-    .wrap{max-width:1180px;margin:0 auto;padding:18px 18px 28px}
-    .top{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:flex-start;margin-bottom:14px}
-    h1{margin:0 0 5px;font-size:24px;line-height:1.2}.sub{color:var(--muted);font-size:13px}
-    .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-    button{border:0;border-radius:9px;padding:10px 14px;cursor:pointer;font-weight:700;background:var(--accent);color:#fff;min-height:40px;white-space:nowrap}
-    button.secondary{background:#e5e7eb;color:#111827}button.danger{background:var(--danger);color:#fff}button.ok{background:var(--ok);color:#fff}
-    .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
-    .box{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04);text-align:center}.box .label{font-size:12px;color:var(--muted);margin-bottom:4px}.box .value{font-size:22px;font-weight:800}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.04);overflow:hidden}
-    .info{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;border-bottom:1px solid var(--line)}
-    .field label{display:block;color:var(--muted);font-size:12px;margin-bottom:4px;text-align:center}
-    input{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px;font-size:14px;background:#fff;text-align:center}
-    input:focus{outline:3px solid rgba(37,99,235,.18);border-color:var(--accent)}
-    input.invalid{border-color:var(--danger)!important;background:#fff7f7!important;outline:2px solid rgba(220,38,38,.18)!important}
-    .row-actions{display:flex;gap:8px;justify-content:flex-end;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);background:#fff}
-    .desktop-view{display:block}.mobile-view{display:none}
-    .table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:900px}
-    th,td{border:1px solid var(--line);padding:6px;text-align:center;vertical-align:middle;height:38px}
-    th{background:var(--head);color:var(--headText);font-size:13px;position:sticky;top:0;z-index:1}
-    td.num{width:44px;color:var(--muted);background:#f9fafb}.del-cell{width:54px;background:#fff}
-    input.cell{width:100%;height:30px;border:1px solid transparent;border-radius:5px;text-align:center;font-size:14px;background:transparent;padding:4px}
-    input.cell:focus{outline:2px solid rgba(37,99,235,.25);border-color:var(--accent);background:#fff}.readonly{background:#f9fafb;font-weight:700;text-align:center;vertical-align:middle}.money{font-weight:700;text-align:center}
-    .small-btn{min-height:28px;padding:4px 8px;border-radius:7px;font-size:12px}.icon-del{background:#fee2e2;color:#991b1b}
-    .items{display:flex;flex-direction:column;gap:10px;padding:12px}.item{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 2px 7px rgba(0,0,0,.035)}
-    .item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.item-num{font-weight:800}.mini-sum{font-size:17px;font-weight:800}
-    .fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.fields label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px;text-align:center}.fields input{padding:13px 11px;font-size:17px;min-height:48px;border-radius:12px;text-align:center}
-    .calc{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.calcbox{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}.calcbox .label{font-size:12px;color:var(--muted);margin-bottom:3px;text-align:center}.calcbox .value{font-size:18px;font-weight:800;text-align:center}
-    .note{padding:0 14px 14px;color:var(--muted);font-size:12px;line-height:1.45}
-    .summary .box.total-top{
-    background:#111111 !important;
-    border-color:#111111 !important;
-    color:#ffffff !important;
-}
-.summary .box.total-top .label{color:#ffffff !important;}
-.summary .box.total-top .value{color:#ffffff !important;}
-@media (max-width:991px){body{font-size:16px}.wrap{max-width:640px;padding:12px 12px 28px}.top{position:sticky;top:0;z-index:10;margin:-12px -12px 12px;padding:14px 12px 12px;background:rgba(243,245,247,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:block}h1{font-size:21px}.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}.actions button{min-height:46px;border-radius:12px;font-size:15px;padding:12px 8px}.desktop-view{display:none}.mobile-view{display:block}.card{box-shadow:none;border-radius:16px}.info{grid-template-columns:1fr 1fr;padding:12px}.info input{font-size:17px;min-height:48px;border-radius:12px}.summary{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.summary .box{padding:10px}.summary .box .value{font-size:18px}.summary .box.total-top{grid-column:span 2;background:#111827;color:#fff}.summary .box.total-top .label{color:#d1d5db}.row-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px}.row-actions button{min-height:46px;border-radius:12px;font-size:15px}.note{padding:0 14px 14px}}
-    @media(max-width:380px){.actions{grid-template-columns:1fr 1fr}.actions .danger{grid-column:span 2}.summary{grid-template-columns:1fr}.summary .box.total-top{grid-column:span 1}.fields{grid-template-columns:1fr 1fr}.fields .price-wrap{grid-column:span 2}}
+    @page { size: A4 portrait; margin: 7mm; }
 
-    /* Mobile summary layout: 2x2, total in second row right, same size as others */
-    .summary .box.total-top{
-      background:#111111 !important;
-      border-color:#111111 !important;
-      color:#ffffff !important;
+    :root{
+      --bg:#f3f5f7;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --line:#d7dee8;
+      --head:#1f2937;
+      --headText:#ffffff;
+      --accent:#2563eb;
+      --danger:#dc2626;
+      --ok:#16a34a;
+      --soft:#f9fafb;
+      --readonly:#f9fafb;
+      --active:#2563eb;
+      --print-title-size:28px;
+      --print-body-size:18px;
+      --print-table-size:16px;
+      --print-row-height:30px;
     }
-    .summary .box.total-top .label,
-    .summary .box.total-top .value{
-      color:#ffffff !important;
+
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+
+    body{margin:0;font-family:Arial, Helvetica, sans-serif;color:var(--text);background:var(--bg);font-size:14px}
+
+    header{max-width:1180px;margin:0 auto;padding:18px 18px 14px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:flex-start;background:transparent;border-bottom:0}
+
+    h1{margin:0;font-size:24px;line-height:1.2;font-weight:800;color:var(--text)}
+
+    .job-date-input{width:155px;display:inline-block;text-align:center;font-size:inherit;font-weight:inherit;font-family:inherit;color:inherit;border:1px solid var(--line);border-radius:9px;padding:4px 8px;vertical-align:middle;background:#fff;outline:none;box-shadow:none}
+    .job-date-input:focus{outline:3px solid rgba(37,99,235,.18);border-color:var(--accent);box-shadow:none}
+
+    button{border:0;border-radius:9px;padding:10px 14px;cursor:pointer;font-weight:700;background:var(--accent);color:#fff;min-height:40px;white-space:nowrap;font-size:14px;font-family:Arial, Helvetica, sans-serif;touch-action:manipulation}
+    button:hover{filter:brightness(.98)}
+    button:disabled{opacity:.65;cursor:not-allowed}
+    .danger{background:var(--danger)!important;color:#fff!important}
+    button.danger{background:var(--danger)!important;color:#fff!important}
+    header button{background:#e5e7eb;color:#111827}
+    header button:first-of-type{background:var(--ok);color:#fff}
+    .header-actions{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+
+    .print-note{color:var(--muted);font-size:13px;width:100%;grid-column:1 / -1;margin-top:-6px}
+
+    .summary{max-width:1180px;margin:0 auto 14px;padding:0 18px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;border-bottom:0;color:var(--text);background:transparent;font-size:14px}
+
+    .card{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04);text-align:center;min-height:68px;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--muted)}
+    .card b{color:var(--text);font-size:22px;font-weight:800;line-height:1}
+
+    .wrap{max-width:1180px;margin:0 auto 28px;padding:0 18px;overflow:auto;-webkit-overflow-scrolling:touch}
+
+    table{border-collapse:collapse;width:100%;min-width:900px;table-layout:fixed;font-size:14px;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+
+    th,td{border:1px solid var(--line);height:38px;padding:6px;vertical-align:middle;overflow:hidden;text-align:center}
+    thead th{border-top:1px solid var(--line)!important}
+    th{background:var(--head);color:var(--headText);font-weight:700;text-align:center;padding:8px 4px;font-size:13px;position:sticky;top:0;z-index:1}
+    td.readonly{background:var(--readonly);text-align:center;color:#4b5563;padding:0 4px;font-weight:700}
+
+    input{width:100%;height:100%;box-sizing:border-box;border:1px solid transparent;border-radius:5px;padding:6px 7px;font:inherit;background:transparent;outline:none;-webkit-appearance:none;appearance:none;text-align:center;vertical-align:middle}
+    td input:focus{outline:2px solid rgba(37,99,235,.25);border-color:var(--accent);background:#fff;box-shadow:none}
+
+    th:nth-child(1), td:nth-child(1) { width:42px; }
+    th:nth-child(2), td:nth-child(2) { width:130px; }
+    th:nth-child(3), td:nth-child(3) { width:70px; }
+    th:nth-child(4), td:nth-child(4) { width:80px; }
+    th:nth-child(5), td:nth-child(5) { width:80px; }
+    th:nth-child(6), td:nth-child(6) { width:110px; }
+    th:nth-child(7), td:nth-child(7) { width:90px; }
+    th:nth-child(8), td:nth-child(8) { width:100px; }
+    th:nth-child(9), td:nth-child(9) { width:120px; }
+    th:nth-child(10), td:nth-child(10) { width:70px; text-align:center; }
+
+    td.no-print button{min-height:28px;padding:4px 8px;border-radius:7px;font-size:12px;background:#fee2e2!important;color:#991b1b!important}
+
+    .share-message{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);max-width:92%;background:#111827;color:#fff;padding:10px 14px;border-radius:10px;font-size:14px;z-index:9999;display:none;box-shadow:0 6px 24px rgba(0,0,0,.18)}
+    .row-actions{max-width:1180px;margin:0 auto 10px;padding:0 18px;display:flex;gap:8px;justify-content:flex-end;align-items:center}
+    .row-actions button{background:var(--ok);color:#fff}
+
+    .share-message.show{display:block}
+
+
+
+    @media (min-width:769px){
+      header{grid-template-columns:1fr auto;align-items:start}
+      .header-actions{justify-self:end;align-self:start}
+      header button,
+      header button:first-of-type,
+      .header-actions button{
+        width:auto!important;
+        min-width:0!important;
+        min-height:28px!important;
+        height:28px!important;
+        padding:3px 9px!important;
+        border-radius:7px!important;
+        font-size:12px!important;
+        line-height:1!important;
+        margin:0!important;
+      }
     }
-    @media (max-width:991px){
-      .summary{
-        display:grid !important;
-        grid-template-columns:1fr 1fr !important;
-        align-items:stretch !important;
-      }
-      .summary .box{
-        min-height:74px !important;
-        display:flex !important;
-        flex-direction:column !important;
-        justify-content:center !important;
-      }
-      .summary .box.total-top{
-        grid-column:auto !important;
-      }
+
+    @media (max-width:768px){
+      body{font-size:16px}
+      header{max-width:640px;padding:14px 12px 12px;margin:0 auto 12px;position:sticky;top:0;z-index:5;display:block;background:rgba(243,245,247,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+      h1{width:100%;font-size:21px;margin-bottom:10px}
+      .job-date-input{width:140px;min-height:38px;border-radius:10px}
+      .header-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+      header button{min-height:46px;border-radius:12px;font-size:15px;padding:12px 8px;width:100%;margin:0}
+      .print-note{font-size:12px;line-height:1.35;margin-top:6px}
+      .summary{max-width:640px;grid-template-columns:1fr;gap:8px;padding:0 12px;margin-bottom:12px}
+      .card{padding:10px;min-height:58px;border-radius:12px}
+      .card b{font-size:18px}
+      .row-actions{max-width:640px;padding:0 12px 10px;display:grid;grid-template-columns:1fr}
+      .row-actions button{min-height:46px;border-radius:12px;font-size:15px;padding:12px 8px;width:100%}
+      .wrap{max-width:640px;padding:0 12px 28px}
+      table{min-width:900px;font-size:13px;border-radius:16px}
+      th,td{height:38px}
+      input{font-size:16px;padding:8px 7px}
     }
-    @media(max-width:380px){
-      .summary{
-        grid-template-columns:1fr 1fr !important;
-      }
-      .summary .box.total-top{
-        grid-column:auto !important;
-      }
+
+    body.printing #jobDate,body.printing #jobDate:focus,body.printing #jobDate:active{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;padding:0!important;-webkit-appearance:none!important;appearance:none!important}
+
+    @media print{
+      @page{size:A4 portrait;margin:7mm}
+      body{font-family:'Times New Roman', Times, serif;font-size:var(--print-body-size);background:#fff;color:#000}
+      header button,.print-note,.no-print,.summary,.share-message,.row-actions{display:none!important}
+      header{max-width:none;padding:0 0 5mm 0;margin:0;border:0;display:block;background:#fff}
+      h1{font-size:var(--print-title-size);margin:0 0 3mm 0}
+      .wrap{max-width:none;padding:0;margin:0;overflow:visible}
+      table{width:100%;min-width:0!important;table-layout:fixed;border-collapse:collapse;font-size:var(--print-table-size);box-shadow:none;border-radius:0;border:0}
+      th,td{padding:1px 2px;height:var(--print-row-height);line-height:1.05;overflow:hidden;background:#fff!important;border:1.5px solid #000!important}
+      thead th{border-top:1.5px solid #000!important}
+      th{position:static;background:#f2f2f2!important;color:#000!important}
+      input{font-size:var(--print-table-size);padding:0;height:100%;line-height:1.05;border:0;box-shadow:none!important;background:#fff!important}
+      th:nth-child(1), td:nth-child(1) { width:5%; }
+      th:nth-child(2), td:nth-child(2) { width:15%; }
+      th:nth-child(3), td:nth-child(3) { width:8%; }
+      th:nth-child(4), td:nth-child(4) { width:9%; }
+      th:nth-child(5), td:nth-child(5) { width:9%; }
+      th:nth-child(6), td:nth-child(6) { width:12%; }
+      th:nth-child(7), td:nth-child(7) { width:10%; }
+      th:nth-child(8), td:nth-child(8) { width:12%; }
+      th:nth-child(9), td:nth-child(9) { width:14%; }
+      th:nth-child(10), td:nth-child(10) { display:none!important; }
+      thead{display:table-header-group}
+      #jobDate,#jobDate:focus,#jobDate:active{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;padding:0!important;color:#000!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      #jobDate::placeholder{color:transparent!important}
+      tr{break-inside:avoid;page-break-inside:avoid}
     }
-    @media print{body{background:#fff}.wrap{max-width:none;padding:0}.top{position:static;margin:0 0 8px;padding:0;border:0;background:#fff}.actions,.mobile-view,.note,.row-actions,.del-col,.del-cell{display:none!important}.desktop-view{display:block}.card{border:0;box-shadow:none;border-radius:0}.info{grid-template-columns:repeat(4,1fr)}th{position:static;background:#fff;color:#000}input{border:0!important}.table-wrap{overflow:visible}table{min-width:0;font-size:11px}th,td{height:26px;padding:3px}.summary{display:grid;page-break-inside:avoid}}
   </style>
 </head>
+
 <body>
-<div class="wrap">
-  <div class="top">
-    <div><h1>Калькулятор Плиссе</h1><div class="sub">Один файл: WEB-версия для компьютера и мобильная версия для iOS / Android</div></div>
-    <div class="actions" id="mainActions"><button type="button" class="secondary" onclick="printPage()">Печать</button><button type="button" class="secondary" onclick="savePdf(event)">Сохранить в PDF</button><button type="button" class="secondary" onclick="sharePdf(event)">Поделиться PDF</button><button type="button" class="danger" onclick="clearAll()">Очистить</button></div>
-  </div>
-  <div class="summary top-summary">
-    <div class="box"><div class="label">Всего изделий</div><div class="value" id="itemsCount">0</div></div>
-    <div class="box"><div class="label">Общая квадратура</div><div class="value"><span id="areaTotal">0.00</span> м²</div></div>
-    <div class="box"><div class="label">К расчету по минимуму 1 м²</div><div class="value"><span id="billableAreaTotal">0.00</span> м²</div></div>
-    <div class="box total-top"><div class="label">Итого</div><div class="value"><span id="totalBox">0</span> сом</div></div>
-  </div>
-  <div class="card">
-    <div class="info">
-      <div class="field"><label>Клиент</label><input id="client" placeholder="Имя клиента"></div>
-      <div class="field"><label>Ткань</label><input id="fabric" placeholder="Вид ткани"></div>
-      <div class="field"><label>Профиль</label><input id="profile" placeholder="Цвет профиля"></div>
-      <div class="field"><label>Дата</label><input id="date" type="date"></div>
+  <header>
+    <h1>Сменное задание — <input id="jobDate" class="job-date-input" type="text" placeholder=""></h1>
+    <div class="header-actions">
+      <button onclick="window.print()">Печать</button>
+      <button onclick="window.print()">Сохранить PDF</button>
+      <button onclick="sendDocument()">Отправить</button>
+      <button class="danger" onclick="clearAll()">Очистить</button>
     </div>
-    <div class="row-actions"><button type="button" class="ok" onclick="addRow()">Добавить строку</button><button type="button" class="secondary" onclick="deleteLastRow()">Удалить строку</button></div>
-    <div class="desktop-view"><div class="table-wrap"><table id="calcTable"><thead><tr><th>№</th><th>Ширина, см</th><th>Длина, см</th><th>Квадратура, м²</th><th>Цена/м²</th><th>Сумма</th><th class="del-col">Удалить</th></tr></thead><tbody></tbody></table></div></div>
-    <div class="mobile-view"><div class="items" id="items"></div></div>
-    <div class="note">Формула как в Excel: квадратура = ширина × длина / 10000. Сумма = MAX(квадратура, 1) × цена/м². Если изделие меньше 1 м², расчет идет как за 1 м².</div>
+    <div class="print-note">Один клик — ввод. Enter — вниз. Tab — вправо. PDF создается автономно, без подключения к интернету.</div>
+  </header>
+
+  <div class="summary">
+    <div class="card">Всего изделий: <b id="totalRows">0</b></div>
+    <div class="card">Общая длина нитки: <b id="totalCord">0</b> метров</div>
+    <div class="card">Общий метраж профиля: <b id="profileMeters">0</b> метров</div>
   </div>
-</div>
+
+
+  <div class="row-actions">
+    <button type="button" onclick="addRow()">Добавить строку</button>
+  </div>
+
+  <div class="wrap">
+    <table id="sheet">
+      <thead>
+        <tr>
+          <th>№</th>
+          <th>Ткань</th>
+          <th>Номер</th>
+          <th>Ширина</th>
+          <th>Высота</th>
+          <th>Профиль</th>
+          <th>Складки</th>
+          <th>Нитка</th>
+          <th>Длина нитки</th>
+          <th class="no-print">Удалить</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div id="shareMessage" class="share-message"></div>
+
 <script>
-const STORE='plisseSalesCalcResponsiveOneFile';
-const MIN_ROWS=1;
-const DEFAULT_ROWS=29;
-const state={rows:Array.from({length:DEFAULT_ROWS},()=>({w:'',l:'',p:''}))};
-const undoStack=[];
-const redoStack=[];
-const HISTORY_LIMIT=80;
-let isRestoringHistory=false;
-let activeEditSnapshot=null;
-let activeEditSaved=false;
-const $=id=>document.getElementById(id);
-function money(n){return Number(n||0).toLocaleString('ru-RU',{maximumFractionDigits:0});}
-function num(v){return parseFloat(String(v||'').replace(',','.'))||0;}
-function calcRow(r){const w=num(r.w),l=num(r.l),p=num(r.p),has=w>0||l>0||p>0,complete=w>0&&l>0&&p>0,area=complete?w*l/10000:0,billable=complete?Math.max(area,1):0,sum=complete?billable*p:0;return{w,l,p,has,complete,area,billable,sum};}
-function makeDesktopRow(i){const idx=i-1;const tr=document.createElement('tr');tr.innerHTML=`<td class="num">${i}</td><td><input class="cell width" data-i="${idx}" data-k="w" inputmode="decimal" autocomplete="off"></td><td><input class="cell length" data-i="${idx}" data-k="l" inputmode="decimal" autocomplete="off"></td><td class="readonly area" data-i="${idx}"></td><td><input class="cell price" data-i="${idx}" data-k="p" inputmode="decimal" autocomplete="off"></td><td class="readonly money sum" data-i="${idx}"></td><td class="del-cell"><button type="button" class="small-btn icon-del" onclick="deleteRow(${idx})">×</button></td>`;return tr;}
-function makeMobileCard(i){const idx=i-1;const div=document.createElement('div');div.className='item';div.innerHTML=`<div class="item-head"><div class="item-num">Изделие №${i}</div><div style="display:flex;gap:8px;align-items:center"><div class="mini-sum"><span class="sum" data-i="${idx}"></span><span class="sum-unit" data-i="${idx}"></span></div><button type="button" class="small-btn icon-del" onclick="deleteRow(${idx})">×</button></div></div><div class="fields"><div><label>Ширина, см</label><input data-i="${idx}" data-k="w" inputmode="decimal" autocomplete="off"></div><div><label>Длина, см</label><input data-i="${idx}" data-k="l" inputmode="decimal" autocomplete="off"></div><div class="price-wrap"><label>Цена/м²</label><input data-i="${idx}" data-k="p" inputmode="decimal" autocomplete="off"></div></div><div class="calc"><div class="calcbox"><div class="label">Квадратура</div><div class="value"><span class="area" data-i="${idx}"></span><span class="area-unit" data-i="${idx}"></span></div></div><div class="calcbox"><div class="label">К расчету</div><div class="value"><span class="billable" data-i="${idx}">0.00</span> м²</div></div></div>`;return div;}
-function renderRows(){const tbody=$('calcTable').querySelector('tbody');const items=$('items');tbody.innerHTML='';items.innerHTML='';state.rows.forEach((_,idx)=>{tbody.appendChild(makeDesktopRow(idx+1));items.appendChild(makeMobileCard(idx+1));});syncInputs();recalc();}
-function syncInputs(){document.querySelectorAll('input[data-i][data-k]').forEach(inp=>{const r=state.rows[+inp.dataset.i];if(!r)return;const v=r[inp.dataset.k]||'';if(inp.value!==v)inp.value=v;});}
-function updateRowDisplay(i){const r=state.rows[i];if(!r)return;const c=calcRow(r);document.querySelectorAll(`.area[data-i="${i}"]`).forEach(e=>e.textContent=c.complete?c.area.toFixed(2):'');document.querySelectorAll(`.area-unit[data-i="${i}"]`).forEach(e=>e.textContent=c.complete?' м²':'');document.querySelectorAll(`.billable[data-i="${i}"]`).forEach(e=>e.textContent=c.complete?c.billable.toFixed(2):'');document.querySelectorAll(`.sum[data-i="${i}"]`).forEach(e=>e.textContent=c.complete?money(c.sum):'');document.querySelectorAll(`.sum-unit[data-i="${i}"]`).forEach(e=>e.textContent=c.complete?' сом':'');}
-function updateTotals(){let total=0,areaTotal=0,billableTotal=0,count=0;state.rows.forEach(r=>{const c=calcRow(r);total+=c.sum;areaTotal+=c.area;billableTotal+=c.billable;if(c.complete)count++;});$('itemsCount').textContent=count;$('areaTotal').textContent=areaTotal.toFixed(2);$('billableAreaTotal').textContent=billableTotal.toFixed(2);$('totalBox').textContent=money(total);saveData(true);}
-function recalc(){state.rows.forEach((_,i)=>updateRowDisplay(i));updateTotals();}
-function syncSameField(i,k,source){document.querySelectorAll(`input[data-i="${i}"][data-k="${k}"]`).forEach(inp=>{if(inp!==source&&inp.value!==source.value)inp.value=source.value;});}
-function snapshot(){return JSON.stringify(collect());}
-function pushHistorySnapshot(snap){if(isRestoringHistory||!snap)return;const current=snapshot();if(snap===current)return;if(undoStack[undoStack.length-1]!==snap){undoStack.push(snap);if(undoStack.length>HISTORY_LIMIT)undoStack.shift();}redoStack.length=0;}
-function pushHistory(){pushHistorySnapshot(snapshot());}
-function restoreSnapshot(snap){if(!snap)return;isRestoringHistory=true;apply(JSON.parse(snap));isRestoringHistory=false;saveData(true);}
-function undo(){const current=snapshot();const prev=undoStack.pop();if(!prev)return;redoStack.push(current);restoreSnapshot(prev);}
-function redo(){const current=snapshot();const next=redoStack.pop();if(!next)return;undoStack.push(current);restoreSnapshot(next);}
-function collect(){return{client:$('client').value,fabric:$('fabric').value,profile:$('profile').value,date:$('date').value,rows:state.rows};}
-function apply(data){if(!data)data={};$('client').value=data.client||'';$('fabric').value=data.fabric||'';$('profile').value=data.profile||'';$('date').value=data.date||new Date().toISOString().slice(0,10);const rows=Array.isArray(data.rows)?data.rows:[];state.rows=(rows.length?rows:Array.from({length:DEFAULT_ROWS},()=>({}))).map(r=>({w:r.w||'',l:r.l||'',p:r.p||''}));if(state.rows.length<MIN_ROWS)state.rows.push({w:'',l:'',p:''});renderRows();}
-function saveData(silent=false){try{localStorage.setItem(STORE,JSON.stringify(collect()));if(!silent)alert('Расчет сохранен в этом браузере.');}catch(e){}}
-function loadData(showAlert=false){const raw=localStorage.getItem(STORE);if(raw){try{apply(JSON.parse(raw));if(showAlert)alert('Сохраненный расчет загружен.');return;}catch(e){}}apply({date:new Date().toISOString().slice(0,10),rows:Array.from({length:DEFAULT_ROWS},()=>({}))});}
-function clearAll(){if(!confirm('Очистить весь расчет?'))return;pushHistory();localStorage.removeItem(STORE);apply({date:new Date().toISOString().slice(0,10),rows:Array.from({length:DEFAULT_ROWS},()=>({}))});}
-function addRow(){pushHistory();state.rows.push({w:'',l:'',p:''});renderRows();saveData(true);setTimeout(()=>focusCell(state.rows.length-1,'w'),0);}
-function deleteLastRow(){deleteRow(state.rows.length-1);}
-function deleteRow(index){pushHistory();if(state.rows.length<=MIN_ROWS){state.rows=[{w:'',l:'',p:''}];renderRows();saveData(true);return;}state.rows.splice(index,1);renderRows();saveData(true);}
+const tbody = document.querySelector('#sheet tbody');
 
-function sanitizeNumberString(value){let v=String(value||'').replace(',', '.').replace(/[^0-9.]/g,'');const firstDot=v.indexOf('.');if(firstDot!==-1){v=v.slice(0,firstDot+1)+v.slice(firstDot+1).replace(/\./g,'');}if(v.startsWith('.'))v='0'+v;if(v.length>12)v=v.slice(0,12);return v;}
-function sanitizeNumberInput(input){const old=input.value;const clean=sanitizeNumberString(old);if(old!==clean)input.value=clean;input.classList.toggle('invalid',clean!==''&&num(clean)<=0);return clean;}
-
-
-function printPage(){
-  saveData(true);
-  setTimeout(()=>window.print(),50);
-}
-function pdfFileName(){const client=($('client').value||'').trim().replace(/[\\/:*?"<>|]+/g,'-');const date=($('date').value||'').trim();return client?`plisse_${client}_${date||'calculation'}.pdf`:'plisse_calculation.pdf';}
-function rowsForPdf(){return state.rows.map((r,i)=>{const c=calcRow(r);return{n:i+1,...c};});}
-function drawPdfPage(){const rowData=rowsForPdf();const rowsPerPage=Math.max(rowData.length,1);const canvas=document.createElement('canvas');canvas.width=1240;canvas.height=Math.max(1754,360+38*(rowsPerPage+4));const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#111827';ctx.font='bold 36px Arial';ctx.fillText('Калькулятор Плиссе',70,70);ctx.font='18px Arial';ctx.fillStyle='#4b5563';ctx.fillText('Расчет стоимости готовых изделий',70,103);const info=[['Клиент',$('client').value],['Ткань',$('fabric').value],['Профиль',$('profile').value],['Дата',$('date').value]];let x=70,y=145,w=260,h=66;ctx.lineWidth=1.5;ctx.strokeStyle='#d7dee8';info.forEach((it,idx)=>{const xx=x+idx*(w+18);ctx.strokeRect(xx,y,w,h);ctx.fillStyle='#6b7280';ctx.font='16px Arial';ctx.fillText(it[0],xx+14,y+24);ctx.fillStyle='#111827';ctx.font='bold 19px Arial';ctx.fillText(String(it[1]||'—'),xx+14,y+52);});const startY=250,rowH=38;const cols=[70,130,285,440,610,770,940];const widths=[60,155,155,170,160,170,230];const heads=['№','Ширина, см','Длина, см','Квадратура, м²','Цена/м²','К расчету, м²','Сумма'];ctx.fillStyle='#1f2937';ctx.fillRect(cols[0],startY,widths.reduce((a,b)=>a+b,0),rowH);ctx.strokeStyle='#d7dee8';ctx.fillStyle='#fff';ctx.font='bold 16px Arial';heads.forEach((head,i)=>ctx.fillText(head,cols[i]+10,startY+25));let total=0,areaTotal=0,billableTotal=0,count=0;rowData.forEach((r,ri)=>{const yy=startY+rowH*(ri+1);ctx.fillStyle=ri%2?'#ffffff':'#f9fafb';ctx.fillRect(cols[0],yy,widths.reduce((a,b)=>a+b,0),rowH);ctx.strokeStyle='#d7dee8';cols.forEach((cx,i)=>ctx.strokeRect(cx,yy,widths[i],rowH));ctx.fillStyle='#111827';ctx.font='15px Arial';const vals=[r.n,r.w||'',r.l||'',r.complete?r.area.toFixed(2):'',r.p||'',r.complete?r.billable.toFixed(2):'',r.complete?money(r.sum):''];vals.forEach((v,i)=>ctx.fillText(String(v),cols[i]+10,yy+25));total+=r.sum;areaTotal+=r.area;billableTotal+=r.billable;if(r.complete)count++;});const sy=startY+rowH*(rowData.length+2);const boxes=[['Всего изделий',count],['Общая квадратура',areaTotal.toFixed(2)+' м²'],['К расчету',billableTotal.toFixed(2)+' м²'],['Итого',money(total)+' сом']];boxes.forEach((b,i)=>{const xx=70+i*280;ctx.strokeStyle='#d7dee8';ctx.strokeRect(xx,sy,250,78);ctx.fillStyle='#6b7280';ctx.font='16px Arial';ctx.fillText(b[0],xx+14,sy+28);ctx.fillStyle='#111827';ctx.font='bold 24px Arial';ctx.fillText(String(b[1]),xx+14,sy+62);});ctx.fillStyle='#6b7280';ctx.font='14px Arial';ctx.fillText('Формула: квадратура = ширина × длина / 10000. Если изделие меньше 1 м², расчет идет как за 1 м².',70,canvas.height-70);return canvas;}
-function dataUrlToBytes(dataUrl){const bin=atob(dataUrl.split(',')[1]);const bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);return bytes;}
-function buildSingleImagePdf(jpegBytes,imgWidth,imgHeight,pageWidth=595,pageHeight=842){const enc=new TextEncoder();const parts=[];let offset=0;const xref=[];function add(part){if(typeof part==='string')part=enc.encode(part);parts.push(part);offset+=part.length;}function obj(n,bodyParts){xref[n]=offset;add(`${n} 0 obj\n`);bodyParts.forEach(add);add(`\nendobj\n`);}add('%PDF-1.4\n%PDF-BINARY\n');obj(1,[`<< /Type /Catalog /Pages 2 0 R >>`]);obj(2,[`<< /Type /Pages /Kids [3 0 R] /Count 1 >>`]);obj(3,[`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth} ${pageHeight}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>`]);obj(4,[`<< /Type /XObject /Subtype /Image /Width ${imgWidth} /Height ${imgHeight} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.length} >>\nstream\n`,jpegBytes,`\nendstream`]);const stream=`q\n${pageWidth} 0 0 ${pageHeight} 0 0 cm\n/Im0 Do\nQ\n`;obj(5,[`<< /Length ${stream.length} >>\nstream\n${stream}endstream`]);const start=offset;add(`xref\n0 6\n0000000000 65535 f \n`);for(let i=1;i<=5;i++)add(String(xref[i]).padStart(10,'0')+' 00000 n \n');add(`trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${start}\n%%EOF`);return new Blob(parts,{type:'application/pdf'});}
-function createPdfBlob(){const canvas=drawPdfPage();const jpeg=dataUrlToBytes(canvas.toDataURL('image/jpeg',0.92));return buildSingleImagePdf(jpeg,canvas.width,canvas.height,595,842);}
-function isIOS(){return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);}
-function cleanPdfName(filename){let name=(filename||'plisse_calculation.pdf').trim();name=name.replace(/\.html?$/i,'').replace(/\.pdf$/i,'');if(!name)name='plisse_calculation';return name+'.pdf';}
-function blobToDataUrl(blob){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(blob);});}
-async function downloadPdfBlob(blob,filename){const cleanName=cleanPdfName(filename);const pdfBlob=blob.type==='application/pdf'?blob:new Blob([blob],{type:'application/pdf'});const dataUrl=await blobToDataUrl(pdfBlob);const a=document.createElement('a');a.href=dataUrl;a.download=cleanName;a.rel='noopener';a.type='application/pdf';a.style.display='none';document.body.appendChild(a);a.click();a.remove();if(isIOS()){setTimeout(()=>{const url=URL.createObjectURL(pdfBlob);window.open(url,'_blank');setTimeout(()=>URL.revokeObjectURL(url),60000);},250);}}
-
-function escapeHtml(v){return String(v||'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));}
-function pdfPrintHtml(){const rows=rowsForPdf();let total=0,areaTotal=0,billableTotal=0,count=0;const bodyRows=rows.map(r=>{total+=r.sum;areaTotal+=r.area;billableTotal+=r.billable;if(r.complete)count++;return `<tr><td>${r.n}</td><td>${escapeHtml(r.w||'')}</td><td>${escapeHtml(r.l||'')}</td><td>${r.complete?r.area.toFixed(2):''}</td><td>${escapeHtml(r.p||'')}</td><td>${r.complete?r.billable.toFixed(2):''}</td><td>${r.complete?money(r.sum):''}</td></tr>`;}).join('');return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>${escapeHtml(pdfFileName())}</title><style>body{font-family:Arial,Helvetica,sans-serif;color:#111827;margin:24px}.head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:18px}h1{font-size:24px;margin:0 0 4px}.sub{color:#6b7280;font-size:13px}.info,.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.box{border:1px solid #d7dee8;border-radius:8px;padding:9px}.label{font-size:12px;color:#6b7280;margin-bottom:4px}.value{font-size:16px;font-weight:700}table{width:100%;border-collapse:collapse;margin-top:14px;font-size:12px}th,td{border:1px solid #d7dee8;padding:6px;text-align:center}th{background:#1f2937;color:#fff}.note{font-size:11px;color:#6b7280;margin-top:14px}@media print{body{margin:10mm}.no-print{display:none}.box{break-inside:avoid}th{background:#1f2937!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body><div class="head"><div><h1>Калькулятор Плиссе</h1><div class="sub">Текстовая PDF-версия расчета</div></div><button class="no-print" onclick="window.print()">Сохранить / печать PDF</button></div><div class="info"><div class="box"><div class="label">Клиент</div><div class="value">${escapeHtml($('client').value)||'—'}</div></div><div class="box"><div class="label">Ткань</div><div class="value">${escapeHtml($('fabric').value)||'—'}</div></div><div class="box"><div class="label">Профиль</div><div class="value">${escapeHtml($('profile').value)||'—'}</div></div><div class="box"><div class="label">Дата</div><div class="value">${escapeHtml($('date').value)||'—'}</div></div></div><table><thead><tr><th>№</th><th>Ширина, см</th><th>Длина, см</th><th>Квадратура, м²</th><th>Цена/м²</th><th>К расчету, м²</th><th>Сумма</th></tr></thead><tbody>${bodyRows}</tbody></table><div class="summary"><div class="box"><div class="label">Всего изделий</div><div class="value">${count}</div></div><div class="box"><div class="label">Общая квадратура</div><div class="value">${areaTotal.toFixed(2)} м²</div></div><div class="box"><div class="label">К расчету</div><div class="value">${billableTotal.toFixed(2)} м²</div></div><div class="box"><div class="label">Итого</div><div class="value">${money(total)} сом</div></div></div><div class="note">Формула: квадратура = ширина × длина / 10000. Если изделие меньше 1 м², расчет идет как за 1 м².</div><script>setTimeout(()=>window.print(),300)<\/script></body></html>`;}
-function openTextPdfWindow(){const html=pdfPrintHtml();const win=window.open('','_blank');if(!win){alert('Разрешите всплывающие окна, чтобы открыть PDF-версию.');return;}win.document.open();win.document.write(html);win.document.close();}
-
-async function savePdf(e){if(e){e.preventDefault();e.stopPropagation();}saveData(true);openTextPdfWindow();}
-async function sharePdf(e){if(e){e.preventDefault();e.stopPropagation();}saveData(true);openTextPdfWindow();alert('Откроется текстовая PDF-версия. Сохраните ее как PDF, затем отправьте через WhatsApp или Telegram.');}
-function isDesktopMode(){return window.matchMedia('(min-width: 992px)').matches;}
-function activeViewSelector(){return isDesktopMode()?'.desktop-view':'.mobile-view';}
-function focusCell(rowIndex,key){const next=document.querySelector(`${activeViewSelector()} input[data-i="${rowIndex}"][data-k="${key}"]`);if(next){next.focus();next.select();}}
-function focusDesktopCell(rowIndex,key){const next=document.querySelector(`.desktop-view input.cell[data-i="${rowIndex}"][data-k="${key}"]`);if(next){next.focus();next.select();}}
-function orderedInputs(){return Array.from(document.querySelectorAll(`${activeViewSelector()} input[data-i][data-k]`));}
-function moveSequential(from,step=1){const inputs=orderedInputs();const pos=inputs.indexOf(from);if(pos<0)return false;const next=inputs[Math.max(0,Math.min(inputs.length-1,pos+step))];if(next&&next!==from){next.focus();next.select();}return true;}
-document.addEventListener('keydown',e=>{
-  if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.key.toLowerCase()==='z'){e.preventDefault();undo();return;}
-  if(((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y')||((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.key.toLowerCase()==='z')){e.preventDefault();redo();return;}
-  const t=e.target;
-  if(!t.matches('input[data-i][data-k]'))return;
-  const editableKeys=['w','l','p'];
-  const currentRow=Number(t.dataset.i);
-  const currentKey=t.dataset.k;
-  const currentCol=editableKeys.indexOf(currentKey);
-  if(e.key==='Enter'){e.preventDefault();moveSequential(t,1);return;}
-  if(e.key==='Tab'){e.preventDefault();moveSequential(t,e.shiftKey?-1:1);return;}
-  if(!isDesktopMode())return;
-  if(e.key==='ArrowDown'){e.preventDefault();focusDesktopCell(Math.min(currentRow+1,state.rows.length-1),currentKey);return;}
-  if(e.key==='ArrowUp'){e.preventDefault();focusDesktopCell(Math.max(currentRow-1,0),currentKey);return;}
-  if(e.key==='ArrowRight'){e.preventDefault();if(currentCol===editableKeys.length-1)focusDesktopCell(Math.min(currentRow+1,state.rows.length-1),editableKeys[0]);else focusDesktopCell(currentRow,editableKeys[currentCol+1]);return;}
-  if(e.key==='ArrowLeft'){e.preventDefault();if(currentCol===0)focusDesktopCell(Math.max(currentRow-1,0),editableKeys[editableKeys.length-1]);else focusDesktopCell(currentRow,editableKeys[currentCol-1]);return;}
+window.addEventListener('beforeprint', () => {
+  document.body.classList.add('printing');
+  const d = document.getElementById('jobDate');
+  if (d) d.blur();
 });
-document.addEventListener('focusin',e=>{if(e.target.matches('input[data-i][data-k],#client,#fabric,#profile,#date')){activeEditSnapshot=snapshot();activeEditSaved=false;}});
-document.addEventListener('input',e=>{
-  if(e.target.matches('input[data-i][data-k]')){
-    if(!activeEditSaved){pushHistorySnapshot(activeEditSnapshot);activeEditSaved=true;}
-    const i=+e.target.dataset.i,k=e.target.dataset.k;
-    const clean=sanitizeNumberInput(e.target);
-    if(state.rows[i]){state.rows[i][k]=clean;syncSameField(i,k,e.target);updateRowDisplay(i);updateTotals();}
-  }else if(e.target.matches('#client,#fabric,#profile,#date')){
-    if(!activeEditSaved){pushHistorySnapshot(activeEditSnapshot);activeEditSaved=true;}
-    saveData(true);
+
+window.addEventListener('afterprint', () => {
+  document.body.classList.remove('printing');
+});
+
+
+function format(n) {
+  if (!isFinite(n)) return '';
+  return Math.round(n * 100) / 100;
+}
+
+function num(v) {
+  const n = parseFloat(String(v || '').replace(',', '.'));
+  return isNaN(n) ? 0 : n;
+}
+
+function isCompleteProductRow(tr) {
+  const requiredTextFields = ['fabric', 'number', 'profile', 'cord'];
+  const textFilled = requiredTextFields.every(cls =>
+    (tr.querySelector('.' + cls)?.value || '').trim() !== ''
+  );
+
+  const width = num(tr.querySelector('.width')?.value);
+  const height = num(tr.querySelector('.height')?.value);
+
+  return textFilled && width > 0 && height > 0;
+}
+
+function makeInput(type, className) {
+  const input = document.createElement('input');
+
+  // Для стабильного ввода на iOS/Android/Chrome используем text,
+  // а цифровую клавиатуру включаем через inputMode.
+  input.type = 'text';
+  input.className = className;
+  input.autocomplete = 'off';
+  input.enterKeyHint = 'next';
+
+  if (type === 'number') {
+    input.inputMode = 'decimal';
+    input.pattern = '[0-9]*[.,]?[0-9]*';
+  }
+
+  input.addEventListener('input', recalcAll);
+  input.addEventListener('change', recalcAll);
+  input.addEventListener('keydown', handleNavigation);
+  input.addEventListener('keyup', recalcAll);
+
+  return input;
+}
+
+function addCellInput(tr, className, value = '', type = 'text') {
+  const td = document.createElement('td');
+  const input = makeInput(type, className);
+  input.value = value || '';
+
+  // Координаты ячейки для надежной навигации стрелками
+  input.dataset.i = tr.dataset.rowIndex || '0';
+  input.dataset.k = className;
+
+  td.appendChild(input);
+  tr.appendChild(td);
+}
+
+function addRow(data = {}) {
+  const tr = document.createElement('tr');
+  tr.dataset.rowIndex = tbody.children.length;
+
+  const no = document.createElement('td');
+  no.className = 'row-no readonly';
+  tr.appendChild(no);
+
+  addCellInput(tr, 'fabric', data.fabric);
+  addCellInput(tr, 'number', data.number);
+  addCellInput(tr, 'width', data.width, 'number');
+  addCellInput(tr, 'height', data.height, 'number');
+  addCellInput(tr, 'profile', data.profile);
+
+  const folds = document.createElement('td');
+  folds.className = 'folds readonly';
+  tr.appendChild(folds);
+
+  addCellInput(tr, 'cord', data.cord);
+
+  const cordLength = document.createElement('td');
+  cordLength.className = 'cord-length readonly';
+  tr.appendChild(cordLength);
+
+  const del = document.createElement('td');
+  del.className = 'no-print';
+
+  const btn = document.createElement('button');
+  btn.textContent = '×';
+  btn.className = 'danger';
+  btn.onclick = () => {
+    tr.remove();
+    recalcAll();
+  };
+
+  del.appendChild(btn);
+  tr.appendChild(del);
+
+  tbody.appendChild(tr);
+  recalcAll();
+}
+
+function addRows(n) {
+  for (let i = 0; i < n; i++) addRow();
+}
+
+function clearAll() {
+  if (!confirm('Очистить весь расчет?')) return;
+
+  localStorage.removeItem('plisseRows');
+  localStorage.removeItem('plisseJobDate');
+
+  const dateInput = document.getElementById('jobDate');
+  if (dateInput) dateInput.value = '';
+
+  tbody.innerHTML = '';
+  addRows(20);
+  recalcAll();
+}
+
+function editableInputs() {
+  return [...tbody.querySelectorAll('input')];
+}
+
+function handleNavigation(e) {
+  const currentInput = e.target;
+  const row = currentInput.closest('tr');
+  if (!row) return;
+
+  const rows = [...tbody.children];
+  const rowIndex = rows.indexOf(row);
+  const cell = currentInput.closest('td');
+  const colIndex = [...row.children].indexOf(cell);
+
+  if (e.key === 'Enter') {
+    e.preventDefault();
+
+    if (rowIndex === rows.length - 1) {
+      addRow();
+    }
+
+    const nextRow = tbody.children[rowIndex + 1];
+    const nextInput = nextRow?.children[colIndex]?.querySelector('input');
+
+    if (nextInput) {
+      nextInput.focus();
+      nextInput.select();
+    }
+  }
+
+  if (e.key === 'Tab') {
+    const fields = editableInputs();
+    const index = fields.indexOf(currentInput);
+
+    if (index >= 0 && index === fields.length - 1 && !e.shiftKey) {
+      e.preventDefault();
+      addRow();
+      const next = editableInputs()[index + 1];
+
+      if (next) {
+        next.focus();
+        next.select();
+      }
+    }
+  }
+}
+
+
+const editableKeys = ['fabric', 'number', 'width', 'height', 'profile', 'cord'];
+
+function focusSheetCell(rowIndex, key) {
+  const next = document.querySelector(`input[data-i="${rowIndex}"][data-k="${key}"]`);
+
+  if (next) {
+    next.focus();
+    next.select();
+    return true;
+  }
+
+  return false;
+}
+
+document.addEventListener('keydown', e => {
+  const t = e.target;
+
+  if (!t.matches('input[data-i][data-k]')) return;
+
+  const currentRow = Number(t.dataset.i);
+  const currentKey = t.dataset.k;
+  const currentCol = editableKeys.indexOf(currentKey);
+
+  if (currentCol === -1) return;
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+
+    if (currentRow >= tbody.children.length - 1) {
+      addRow();
+    }
+
+    focusSheetCell(Math.min(currentRow + 1, tbody.children.length - 1), currentKey);
+    return;
+  }
+
+  if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    focusSheetCell(Math.max(currentRow - 1, 0), currentKey);
+    return;
+  }
+
+  if (e.key === 'ArrowRight') {
+    e.preventDefault();
+    focusSheetCell(currentRow, editableKeys[Math.min(currentCol + 1, editableKeys.length - 1)]);
+    return;
+  }
+
+  if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    focusSheetCell(currentRow, editableKeys[Math.max(currentCol - 1, 0)]);
+    return;
   }
 });
-document.addEventListener('blur',e=>{if(e.target.matches('input[data-i][data-k]')){const clean=sanitizeNumberInput(e.target);if(clean.endsWith('.')){e.target.value=clean.slice(0,-1);e.target.dispatchEvent(new Event('input',{bubbles:true}));}}},true);
-window.addEventListener('beforeunload',()=>saveData(true));
-loadData(false);
-</script>
+
+// PDF включает все строки таблицы, включая пустые.
+function recalcAll() {
+  let totalCordCm = 0;
+  let totalProfileCm = 0;
+
+  const rows = [...tbody.querySelectorAll('tr')];
+
+  rows.forEach((tr, i) => {
+    tr.dataset.rowIndex = i;
+    tr.querySelectorAll('input[data-k]').forEach(inp => {
+      inp.dataset.i = i;
+    });
+    tr.querySelector('.row-no').textContent = i + 1;
+
+    const width = num(tr.querySelector('.width')?.value);
+    const height = num(tr.querySelector('.height')?.value);
+
+    const folds = Math.round(height < 60 ? height / 2 : height / 2.2);
+    const cordLengthCm = (width + width + height) * 2 + 30;
+
+    tr.querySelector('.folds').textContent = height ? format(folds) : '';
+    tr.querySelector('.cord-length').textContent = (width || height) ? format(cordLengthCm) : '';
+
+    if (width || height) totalCordCm += cordLengthCm;
+    if (width) totalProfileCm += width * 2;
+  });
+
+  const totalRowsEl = document.querySelector('#totalRows');
+  const totalCordEl = document.querySelector('#totalCord');
+  const profileMetersEl = document.querySelector('#profileMeters');
+
+  if (totalRowsEl) {
+    totalRowsEl.textContent = rows.filter(isCompleteProductRow).length;
+  }
+
+  if (totalCordEl) {
+    totalCordEl.textContent = format(totalCordCm / 100) || '0';
+  }
+
+  if (profileMetersEl) {
+    profileMetersEl.textContent = format(totalProfileCm / 100) || '0';
+  }
+
+  saveLocal();
+}
+
+function saveLocal() {
+  const rows = [...tbody.querySelectorAll('tr')].map(tr => ({
+    fabric: tr.querySelector('.fabric')?.value || '',
+    number: tr.querySelector('.number')?.value || '',
+    width: tr.querySelector('.width')?.value || '',
+    height: tr.querySelector('.height')?.value || '',
+    profile: tr.querySelector('.profile')?.value || '',
+    cord: tr.querySelector('.cord')?.value || ''
+  }));
+
+  localStorage.setItem('plisseRows', JSON.stringify(rows));
+}
+
+function loadLocal() {
+  const saved = localStorage.getItem('plisseRows');
+
+  if (saved) {
+    try {
+      const rows = JSON.parse(saved);
+      if (Array.isArray(rows) && rows.length) {
+        rows.forEach(addRow);
+        return;
+      }
+    } catch {}
+  }
+
+  addRows(20);
+}
+
+function escapeHtml(v) {
+  return String(v ?? '')
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;');
+}
+
+function showShareMessage(text) {
+  const box = document.querySelector('#shareMessage');
+
+  if (!box) {
+    alert(text);
+    return;
+  }
+
+  box.textContent = text;
+  box.classList.add('show');
+
+  clearTimeout(window.__shareMsgTimer);
+  window.__shareMsgTimer = setTimeout(() => box.classList.remove('show'), 4500);
+}
+
+
+
+
+
+
+
+function getRowsForPdfCanvas() {
+  recalcAll();
+  const rows = [...tbody.querySelectorAll('tr')].map((tr, i) => [
+      String(i + 1),
+      tr.querySelector('.fabric')?.value || '',
+      tr.querySelector('.number')?.value || '',
+      tr.querySelector('.width')?.value || '',
+      tr.querySelector('.height')?.value || '',
+      tr.querySelector('.profile')?.value || '',
+      tr.querySelector('.folds')?.textContent || '',
+      tr.querySelector('.cord')?.value || '',
+      tr.querySelector('.cord-length')?.textContent || ''
+    ]);
+  return rows.length ? rows : [['', '', '', '', '', '', '', '', '']];
+}
+
+function canvasToJpegBytes(canvas, quality = 0.92) {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(blob => {
+      if (!blob) return reject(new Error('Canvas toBlob failed'));
+      blob.arrayBuffer().then(buf => resolve(new Uint8Array(buf))).catch(reject);
+    }, 'image/jpeg', quality);
+  });
+}
+
+function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 1) {
+  const words = String(text || '').split(/\s+/);
+  let line = '';
+  let lines = [];
+  for (let i = 0; i < words.length; i++) {
+    const test = line ? line + ' ' + words[i] : words[i];
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = words[i];
+      if (lines.length >= maxLines) break;
+    } else {
+      line = test;
+    }
+  }
+  if (lines.length < maxLines && line) lines.push(line);
+  lines = lines.slice(0, maxLines);
+  lines.forEach((l, idx) => ctx.fillText(l, x, y + idx * lineHeight));
+}
+
+async function createPdfBlobFromCanvasPages() {
+  const rows = getRowsForPdfCanvas();
+  const headers = ['№', 'Ткань', 'Номер', 'Ширина', 'Высота', 'Профиль', 'Складки', 'Нитка', 'Длина\nнитки'];
+  const dateValue = (document.getElementById('jobDate')?.value || '').trim();
+  const title = 'Сменное задание — ' + dateValue;
+
+  // A4 portrait at 150 DPI. Text is rendered as an image, so Cyrillic works offline.
+  const canvasW = 1240;
+  const canvasH = 1754;
+  const pageW = 595.28;
+  const pageH = 841.89;
+  const margin = 44;
+  const titleY = 54;
+  const dateY = 82;
+  const tableTop = 138;
+  const rowH = 30;
+  const headerH = 34;
+  const bottom = 44;
+  const rowsPerPage = Math.max(1, Math.floor((canvasH - tableTop - headerH - bottom) / rowH));
+  const colW = [52, 172, 84, 88, 88, 132, 96, 118, 146];
+  const tableW = colW.reduce((a,b)=>a+b,0);
+
+  const chunks = [];
+  for (let i = 0; i < rows.length; i += rowsPerPage) chunks.push(rows.slice(i, i + rowsPerPage));
+  if (!chunks.length) chunks.push([]);
+
+  const images = [];
+
+  for (let p = 0; p < chunks.length; p++) {
+    const canvas = document.createElement('canvas');
+    canvas.width = canvasW;
+    canvas.height = canvasH;
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvasW, canvasH);
+    ctx.fillStyle = '#000000';
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2;
+    ctx.textBaseline = 'middle';
+
+    ctx.font = 'bold 38px "Times New Roman", Times, serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(title, margin, titleY);
+
+    ctx.font = '20px "Times New Roman", Times, serif';
+    ctx.fillText('Сформировано: ' + new Date().toLocaleString('ru-RU'), margin, dateY);
+    ctx.fillText('Всего изделий: ' + (document.getElementById('totalRows')?.textContent || '0') + '    Общая длина нитки: ' + (document.getElementById('totalCord')?.textContent || '0') + ' метров    Общий метраж профиля: ' + (document.getElementById('profileMeters')?.textContent || '0') + ' метров', margin, dateY + 30);
+
+    let y = tableTop;
+    let x = margin;
+
+    ctx.fillStyle = '#eeeeee';
+    ctx.fillRect(margin, y, tableW, headerH);
+    ctx.fillStyle = '#000000';
+    ctx.font = 'bold 24px "Times New Roman", Times, serif';
+    ctx.textAlign = 'center';
+
+    headers.forEach((h, ci) => {
+      ctx.strokeRect(x, y, colW[ci], headerH);
+      ctx.fillText(h, x + colW[ci]/2, y + headerH/2);
+      x += colW[ci];
+    });
+
+    y += headerH;
+    ctx.font = '24px "Times New Roman", Times, serif';
+
+    chunks[p].forEach(row => {
+      x = margin;
+      row.forEach((value, ci) => {
+        ctx.strokeRect(x, y, colW[ci], rowH);
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(x + 2, y + 2, colW[ci] - 4, rowH - 4);
+        ctx.clip();
+        ctx.fillStyle = '#000000';
+        ctx.textAlign = 'center';
+        drawWrappedText(ctx, value, x + colW[ci]/2, y + rowH/2, colW[ci] - 8, 24, 1);
+        ctx.restore();
+        x += colW[ci];
+      });
+      y += rowH;
+    });
+
+    ctx.font = '18px "Times New Roman", Times, serif';
+    ctx.textAlign = 'right';
+    ctx.fillText((p + 1) + '/' + chunks.length, canvasW - margin, canvasH - 24);
+
+    images.push(await canvasToJpegBytes(canvas));
+  }
+
+  return buildPdfWithJpegPages(images, canvasW, canvasH, pageW, pageH);
+}
+
+function encodeAscii(str) {
+  return new TextEncoder().encode(str);
+}
+
+function concatUint8(parts) {
+  const total = parts.reduce((sum, p) => sum + p.length, 0);
+  const out = new Uint8Array(total);
+  let offset = 0;
+  parts.forEach(p => { out.set(p, offset); offset += p.length; });
+  return out;
+}
+
+function buildPdfWithJpegPages(jpegPages, imgW, imgH, pageW, pageH) {
+  const parts = [];
+  const offsets = [0];
+  let pos = 0;
+  const objects = [];
+
+  function addPart(part) {
+    parts.push(part);
+    pos += part.length;
+  }
+  function addObj(contentParts) {
+    objects.push(contentParts);
+    return objects.length;
+  }
+
+  const pageObjNums = [];
+  jpegPages.forEach((jpg, idx) => {
+    const imgObj = addObj([
+      encodeAscii('<< /Type /XObject /Subtype /Image /Width ' + imgW + ' /Height ' + imgH + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + jpg.length + ' >>\nstream\n'),
+      jpg,
+      encodeAscii('\nendstream')
+    ]);
+    const content = 'q\n' + pageW + ' 0 0 ' + pageH + ' 0 0 cm\n/Im' + idx + ' Do\nQ\n';
+    const contentObj = addObj([encodeAscii('<< /Length ' + content.length + ' >>\nstream\n' + content + 'endstream')]);
+    const pageObj = addObj([encodeAscii('<< /Type /Page /Parent 0 0 R /MediaBox [0 0 ' + pageW + ' ' + pageH + '] /Resources << /XObject << /Im' + idx + ' ' + imgObj + ' 0 R >> >> /Contents ' + contentObj + ' 0 R >>')]);
+    pageObjNums.push(pageObj);
+  });
+
+  const pagesObj = addObj([encodeAscii('<< /Type /Pages /Count ' + pageObjNums.length + ' /Kids [' + pageObjNums.map(n => n + ' 0 R').join(' ') + '] >>')]);
+  pageObjNums.forEach(n => {
+    const s = new TextDecoder().decode(objects[n - 1][0]).replace('/Parent 0 0 R', '/Parent ' + pagesObj + ' 0 R');
+    objects[n - 1] = [encodeAscii(s)];
+  });
+  const catalogObj = addObj([encodeAscii('<< /Type /Catalog /Pages ' + pagesObj + ' 0 R >>')]);
+
+  addPart(encodeAscii('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n'));
+  objects.forEach((objParts, i) => {
+    offsets.push(pos);
+    addPart(encodeAscii((i + 1) + ' 0 obj\n'));
+    objParts.forEach(addPart);
+    addPart(encodeAscii('\nendobj\n'));
+  });
+
+  const xref = pos;
+  addPart(encodeAscii('xref\n0 ' + (objects.length + 1) + '\n'));
+  addPart(encodeAscii('0000000000 65535 f \n'));
+  offsets.slice(1).forEach(off => addPart(encodeAscii(String(off).padStart(10, '0') + ' 00000 n \n')));
+  addPart(encodeAscii('trailer\n<< /Size ' + (objects.length + 1) + ' /Root ' + catalogObj + ' 0 R >>\nstartxref\n' + xref + '\n%%EOF'));
+
+  const pdfBytes = concatUint8(parts);
+  return new Blob([pdfBytes], { type: 'application/pdf' });
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.rel = 'noopener';
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
+}
+
+async function sendDocument() {
+  const btn = document.querySelector('button[onclick="sendDocument()"]');
+  const filename = 'smennoe-zadanie-plisse.pdf';
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Создание PDF...';
+  }
+
+  try {
+    const blob = await createPdfBlobFromCanvasPages();
+    const file = new File([blob], filename, { type: 'application/pdf' });
+
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          title: 'Сменное задание — Плиссе',
+          text: 'PDF-файл сменного задания',
+          files: [file]
+        });
+        return;
+      } catch (shareErr) {
+        if (shareErr && shareErr.name === 'AbortError') return;
+      }
+    }
+
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isIOS) {
+      const url = URL.createObjectURL(blob);
+      const opened = window.open(url, '_blank');
+      if (opened) {
+        showShareMessage('PDF открыт. Нажмите «Поделиться» в Safari и выберите WhatsApp или Telegram.');
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+        return;
+      }
+    }
+
+    downloadBlob(blob, filename);
+    showShareMessage('PDF скачан. Отправьте его через WhatsApp или Telegram вручную.');
+  } catch (err) {
+    console.error(err);
+    alert('Не удалось создать PDF. Попробуйте кнопку «Сохранить PDF» через печать.');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Отправить';
+    }
+  }
+}
+
+
+const dateInput = document.getElementById('jobDate');
+if (dateInput) {
+  dateInput.value = localStorage.getItem('plisseJobDate') || '';
+  dateInput.addEventListener('input', () => {
+    localStorage.setItem('plisseJobDate', dateInput.value);
+  });
+}
+
+loadLocal();
+recalcAll();</script>
 </body>
 </html>
