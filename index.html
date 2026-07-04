@@ -22,6 +22,9 @@
     .field label{display:block;color:var(--muted);font-size:12px;margin-bottom:4px;text-align:center}
     input{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px;font-size:14px;background:#fff;text-align:center}
     input:focus{outline:3px solid rgba(37,99,235,.18);border-color:var(--accent)}
+    input.invalid{border-color:var(--danger)!important;background:#fff7f7!important;outline:2px solid rgba(220,38,38,.18)!important}
+    input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent);cursor:pointer}
+    .select-col,.select-cell{width:42px;background:#fff}.selected-count{margin-right:auto;color:var(--muted);font-size:13px;font-weight:700}.item.selected{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
     .row-actions{display:flex;gap:8px;justify-content:flex-end;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);background:#fff}
     .desktop-view{display:block}.mobile-view{display:none}
     .table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:900px}
@@ -43,7 +46,7 @@
 }
 .summary .box.total-top .label{color:#ffffff !important;}
 .summary .box.total-top .value{color:#ffffff !important;}
-@media (max-width:991px){body{font-size:16px}.wrap{max-width:640px;padding:12px 12px 28px}.top{position:sticky;top:0;z-index:10;margin:-12px -12px 12px;padding:14px 12px 12px;background:rgba(243,245,247,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:block}h1{font-size:21px}.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}.actions button{min-height:46px;border-radius:12px;font-size:15px;padding:12px 8px}.desktop-view{display:none}.mobile-view{display:block}.card{box-shadow:none;border-radius:16px}.info{grid-template-columns:1fr 1fr;padding:12px}.info input{font-size:17px;min-height:48px;border-radius:12px}.summary{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.summary .box{padding:10px}.summary .box .value{font-size:18px}.summary .box.total-top{grid-column:span 2;background:#111827;color:#fff}.summary .box.total-top .label{color:#d1d5db}.row-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px}.row-actions button{min-height:46px;border-radius:12px;font-size:15px}.note{padding:0 14px 14px}}
+@media (max-width:991px){body{font-size:16px}.wrap{max-width:640px;padding:12px 12px 28px}.top{position:sticky;top:0;z-index:10;margin:-12px -12px 12px;padding:14px 12px 12px;background:rgba(243,245,247,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:block}h1{font-size:21px}.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}.actions button{min-height:46px;border-radius:12px;font-size:15px;padding:12px 8px}.desktop-view{display:none}.mobile-view{display:block}.card{box-shadow:none;border-radius:16px}.info{grid-template-columns:1fr 1fr;padding:12px}.info input{font-size:17px;min-height:48px;border-radius:12px}.summary{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.summary .box{padding:10px}.summary .box .value{font-size:18px}.summary .box.total-top{grid-column:span 2;background:#111827;color:#fff}.summary .box.total-top .label{color:#d1d5db}.row-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px}.selected-count{grid-column:span 2;text-align:center;margin-right:0}.row-actions button{min-height:46px;border-radius:12px;font-size:15px}.note{padding:0 14px 14px}}
     @media(max-width:380px){.actions{grid-template-columns:1fr 1fr}.actions .danger{grid-column:span 2}.summary{grid-template-columns:1fr}.summary .box.total-top{grid-column:span 1}.fields{grid-template-columns:1fr 1fr}.fields .price-wrap{grid-column:span 2}}
 
     /* Mobile summary layout: 2x2, total in second row right, same size as others */
@@ -80,7 +83,7 @@
         grid-column:auto !important;
       }
     }
-    @media print{body{background:#fff}.wrap{max-width:none;padding:0}.top{position:static;margin:0 0 8px;padding:0;border:0;background:#fff}.actions,.mobile-view,.note,.row-actions,.del-col,.del-cell{display:none!important}.desktop-view{display:block}.card{border:0;box-shadow:none;border-radius:0}.info{grid-template-columns:repeat(4,1fr)}th{position:static;background:#fff;color:#000}input{border:0!important}.table-wrap{overflow:visible}table{min-width:0;font-size:11px}th,td{height:26px;padding:3px}.summary{display:grid;page-break-inside:avoid}}
+    @media print{body{background:#fff}.wrap{max-width:none;padding:0}.top{position:static;margin:0 0 8px;padding:0;border:0;background:#fff}.actions,.mobile-view,.note,.row-actions,.del-col,.del-cell,.select-col,.select-cell{display:none!important}.desktop-view{display:block}.card{border:0;box-shadow:none;border-radius:0}.info{grid-template-columns:repeat(4,1fr)}th{position:static;background:#fff;color:#000}input{border:0!important}.table-wrap{overflow:visible}table{min-width:0;font-size:11px}th,td{height:26px;padding:3px}.summary{display:grid;page-break-inside:avoid}}
   </style>
 </head>
 <body>
@@ -102,8 +105,8 @@
       <div class="field"><label>Дата</label><input id="date" type="date"></div>
       <div class="field"><label>Менеджер</label><input id="manager" placeholder="Имя менеджера"></div>
     </div>
-    <div class="row-actions"><button type="button" class="ok" onclick="addRow()">Добавить строку</button><button type="button" class="secondary" onclick="deleteLastRow()">Удалить строку</button></div>
-    <div class="desktop-view"><div class="table-wrap"><table id="calcTable"><thead><tr><th>№</th><th>Ширина, см</th><th>Длина, см</th><th>Квадратура, м²</th><th>Цена/м²</th><th>Сумма</th><th class="del-col">Удалить</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="row-actions"><span class="selected-count" id="selectedCount">Выбрано: 0</span><button type="button" class="ok" onclick="addRow()">Добавить строку</button><button type="button" class="secondary" onclick="deleteLastRow()">Удалить строку</button><button type="button" class="secondary" id="setSelectedPriceBtn" onclick="setSelectedPrice()" disabled>Цена выбранных</button><button type="button" class="danger" id="deleteSelectedBtn" onclick="deleteSelectedRows()" disabled>Удалить выбранные</button></div>
+    <div class="desktop-view"><div class="table-wrap"><table id="calcTable"><thead><tr><th class="select-col"><input type="checkbox" id="selectAllRows" title="Выбрать все" onchange="toggleSelectAll(this.checked)"></th><th>№</th><th>Ширина, см</th><th>Длина, см</th><th>Квадратура, м²</th><th>Цена/м²</th><th>Сумма</th><th class="del-col">Удалить</th></tr></thead><tbody></tbody></table></div></div>
     <div class="mobile-view"><div class="items" id="items"></div></div>
     <div class="note">Формула как в Excel: квадратура = ширина × длина / 10000. Сумма = MAX(квадратура, 1) × цена/м². Если изделие меньше 1 м², расчет идет как за 1 м².</div>
   </div>
@@ -113,23 +116,49 @@ const STORE='plisseSalesCalcResponsiveOneFile';
 const MIN_ROWS=1;
 const DEFAULT_ROWS=29;
 const state={rows:Array.from({length:DEFAULT_ROWS},()=>({w:'',l:'',p:''}))};
+let selectedRows=new Set();
+const undoStack=[];
+const redoStack=[];
+const HISTORY_LIMIT=80;
+let isRestoringHistory=false;
+let activeEditSnapshot=null;
+let activeEditSaved=false;
 const $=id=>document.getElementById(id);
 function money(n){return Number(n||0).toLocaleString('ru-RU',{maximumFractionDigits:0});}
 function num(v){return parseFloat(String(v||'').replace(',','.'))||0;}
 function calcRow(r){const w=num(r.w),l=num(r.l),p=num(r.p),has=w>0||l>0||p>0,complete=w>0&&l>0&&p>0,area=w*l/10000,billable=has?Math.max(area,1):0,sum=billable*p;return{w,l,p,has,complete,area,billable,sum};}
-function makeDesktopRow(i){const idx=i-1;const tr=document.createElement('tr');tr.innerHTML=`<td class="num">${i}</td><td><input class="cell width" data-i="${idx}" data-k="w" inputmode="decimal" autocomplete="off"></td><td><input class="cell length" data-i="${idx}" data-k="l" inputmode="decimal" autocomplete="off"></td><td class="readonly area" data-i="${idx}">0.00</td><td><input class="cell price" data-i="${idx}" data-k="p" inputmode="decimal" autocomplete="off"></td><td class="readonly money sum" data-i="${idx}">0</td><td class="del-cell"><button type="button" class="small-btn icon-del" onclick="deleteRow(${idx})">×</button></td>`;return tr;}
-function makeMobileCard(i){const idx=i-1;const div=document.createElement('div');div.className='item';div.innerHTML=`<div class="item-head"><div class="item-num">Изделие №${i}</div><div style="display:flex;gap:8px;align-items:center"><div class="mini-sum"><span class="sum" data-i="${idx}">0</span> сом</div><button type="button" class="small-btn icon-del" onclick="deleteRow(${idx})">×</button></div></div><div class="fields"><div><label>Ширина, см</label><input data-i="${idx}" data-k="w" inputmode="decimal" autocomplete="off"></div><div><label>Длина, см</label><input data-i="${idx}" data-k="l" inputmode="decimal" autocomplete="off"></div><div class="price-wrap"><label>Цена/м²</label><input data-i="${idx}" data-k="p" inputmode="decimal" autocomplete="off"></div></div><div class="calc"><div class="calcbox"><div class="label">Квадратура</div><div class="value"><span class="area" data-i="${idx}">0.00</span> м²</div></div><div class="calcbox"><div class="label">К расчету</div><div class="value"><span class="billable" data-i="${idx}">0.00</span> м²</div></div></div>`;return div;}
-function renderRows(){const tbody=$('calcTable').querySelector('tbody');const items=$('items');tbody.innerHTML='';items.innerHTML='';state.rows.forEach((_,idx)=>{tbody.appendChild(makeDesktopRow(idx+1));items.appendChild(makeMobileCard(idx+1));});syncInputs();recalc();}
+function makeDesktopRow(i){const idx=i-1;const tr=document.createElement('tr');tr.innerHTML=`<td class="select-cell"><input type="checkbox" data-select-i="${idx}" ${selectedRows.has(idx)?'checked':''} onchange="toggleRowSelection(${idx},this.checked)"></td><td class="num">${i}</td><td><input class="cell width" data-i="${idx}" data-k="w" inputmode="decimal" autocomplete="off"></td><td><input class="cell length" data-i="${idx}" data-k="l" inputmode="decimal" autocomplete="off"></td><td class="readonly area" data-i="${idx}">0.00</td><td><input class="cell price" data-i="${idx}" data-k="p" inputmode="decimal" autocomplete="off"></td><td class="readonly money sum" data-i="${idx}">0</td><td class="del-cell"><button type="button" class="small-btn icon-del" onclick="deleteRow(${idx})">×</button></td>`;return tr;}
+function makeMobileCard(i){const idx=i-1;const div=document.createElement('div');div.className='item'+(selectedRows.has(idx)?' selected':'');div.innerHTML=`<div class="item-head"><div style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-select-i="${idx}" ${selectedRows.has(idx)?'checked':''} onchange="toggleRowSelection(${idx},this.checked)"><div class="item-num">Изделие №${i}</div></div><div style="display:flex;gap:8px;align-items:center"><div class="mini-sum"><span class="sum" data-i="${idx}">0</span> сом</div><button type="button" class="small-btn icon-del" onclick="deleteRow(${idx})">×</button></div></div><div class="fields"><div><label>Ширина, см</label><input data-i="${idx}" data-k="w" inputmode="decimal" autocomplete="off"></div><div><label>Длина, см</label><input data-i="${idx}" data-k="l" inputmode="decimal" autocomplete="off"></div><div class="price-wrap"><label>Цена/м²</label><input data-i="${idx}" data-k="p" inputmode="decimal" autocomplete="off"></div></div><div class="calc"><div class="calcbox"><div class="label">Квадратура</div><div class="value"><span class="area" data-i="${idx}">0.00</span> м²</div></div><div class="calcbox"><div class="label">К расчету</div><div class="value"><span class="billable" data-i="${idx}">0.00</span> м²</div></div></div>`;return div;}
+function renderRows(){const tbody=$('calcTable').querySelector('tbody');const items=$('items');tbody.innerHTML='';items.innerHTML='';state.rows.forEach((_,idx)=>{tbody.appendChild(makeDesktopRow(idx+1));items.appendChild(makeMobileCard(idx+1));});syncInputs();recalc();updateSelectedUi();}
 function syncInputs(){document.querySelectorAll('input[data-i][data-k]').forEach(inp=>{const r=state.rows[+inp.dataset.i];if(!r)return;const v=r[inp.dataset.k]||'';if(inp.value!==v)inp.value=v;});}
-function recalc(){let total=0,areaTotal=0,billableTotal=0,count=0;state.rows.forEach((r,i)=>{const c=calcRow(r);document.querySelectorAll(`.area[data-i="${i}"]`).forEach(e=>e.textContent=c.area?c.area.toFixed(2):'0.00');document.querySelectorAll(`.billable[data-i="${i}"]`).forEach(e=>e.textContent=c.billable?c.billable.toFixed(2):'0.00');document.querySelectorAll(`.sum[data-i="${i}"]`).forEach(e=>e.textContent=money(c.sum));total+=c.sum;areaTotal+=c.area;billableTotal+=c.billable;if(c.complete)count++;});$('itemsCount').textContent=count;$('areaTotal').textContent=areaTotal.toFixed(2);$('billableAreaTotal').textContent=billableTotal.toFixed(2);$('totalBox').textContent=money(total);saveData(true);}
+function updateRowDisplay(i){const r=state.rows[i];if(!r)return;const c=calcRow(r);document.querySelectorAll(`.area[data-i="${i}"]`).forEach(e=>e.textContent=c.area?c.area.toFixed(2):'0.00');document.querySelectorAll(`.billable[data-i="${i}"]`).forEach(e=>e.textContent=c.billable?c.billable.toFixed(2):'0.00');document.querySelectorAll(`.sum[data-i="${i}"]`).forEach(e=>e.textContent=money(c.sum));}
+function updateTotals(){let total=0,areaTotal=0,billableTotal=0,count=0;state.rows.forEach(r=>{const c=calcRow(r);total+=c.sum;areaTotal+=c.area;billableTotal+=c.billable;if(c.complete)count++;});$('itemsCount').textContent=count;$('areaTotal').textContent=areaTotal.toFixed(2);$('billableAreaTotal').textContent=billableTotal.toFixed(2);$('totalBox').textContent=money(total);saveData(true);}
+function recalc(){state.rows.forEach((_,i)=>updateRowDisplay(i));updateTotals();}
+function syncSameField(i,k,source){document.querySelectorAll(`input[data-i="${i}"][data-k="${k}"]`).forEach(inp=>{if(inp!==source&&inp.value!==source.value)inp.value=source.value;});}
+function snapshot(){return JSON.stringify(collect());}
+function pushHistorySnapshot(snap){if(isRestoringHistory||!snap)return;const current=snapshot();if(snap===current)return;if(undoStack[undoStack.length-1]!==snap){undoStack.push(snap);if(undoStack.length>HISTORY_LIMIT)undoStack.shift();}redoStack.length=0;}
+function pushHistory(){pushHistorySnapshot(snapshot());}
+function restoreSnapshot(snap){if(!snap)return;isRestoringHistory=true;apply(JSON.parse(snap));isRestoringHistory=false;saveData(true);}
+function undo(){const current=snapshot();const prev=undoStack.pop();if(!prev)return;redoStack.push(current);restoreSnapshot(prev);}
+function redo(){const current=snapshot();const next=redoStack.pop();if(!next)return;undoStack.push(current);restoreSnapshot(next);}
 function collect(){return{client:$('client').value,order:$('order').value,date:$('date').value,manager:$('manager').value,rows:state.rows};}
 function apply(data){if(!data)data={};$('client').value=data.client||'';$('order').value=data.order||'';$('date').value=data.date||new Date().toISOString().slice(0,10);$('manager').value=data.manager||'';const rows=Array.isArray(data.rows)?data.rows:[];state.rows=(rows.length?rows:Array.from({length:DEFAULT_ROWS},()=>({}))).map(r=>({w:r.w||'',l:r.l||'',p:r.p||''}));if(state.rows.length<MIN_ROWS)state.rows.push({w:'',l:'',p:''});renderRows();}
 function saveData(silent=false){try{localStorage.setItem(STORE,JSON.stringify(collect()));if(!silent)alert('Расчет сохранен в этом браузере.');}catch(e){}}
 function loadData(showAlert=false){const raw=localStorage.getItem(STORE);if(raw){try{apply(JSON.parse(raw));if(showAlert)alert('Сохраненный расчет загружен.');return;}catch(e){}}apply({date:new Date().toISOString().slice(0,10),rows:Array.from({length:DEFAULT_ROWS},()=>({}))});}
-function clearAll(){if(!confirm('Очистить весь расчет?'))return;localStorage.removeItem(STORE);apply({date:new Date().toISOString().slice(0,10),rows:Array.from({length:DEFAULT_ROWS},()=>({}))});}
-function addRow(){state.rows.push({w:'',l:'',p:''});renderRows();saveData(true);setTimeout(()=>focusDesktopCell(state.rows.length-1,'w'),0);}
+function clearAll(){if(!confirm('Очистить весь расчет?'))return;pushHistory();localStorage.removeItem(STORE);apply({date:new Date().toISOString().slice(0,10),rows:Array.from({length:DEFAULT_ROWS},()=>({}))});}
+function addRow(){pushHistory();state.rows.push({w:'',l:'',p:''});renderRows();saveData(true);setTimeout(()=>focusCell(state.rows.length-1,'w'),0);}
 function deleteLastRow(){deleteRow(state.rows.length-1);}
-function deleteRow(index){if(state.rows.length<=MIN_ROWS){state.rows=[{w:'',l:'',p:''}];renderRows();saveData(true);return;}state.rows.splice(index,1);renderRows();saveData(true);}
+function deleteRow(index){pushHistory();if(state.rows.length<=MIN_ROWS){state.rows=[{w:'',l:'',p:''}];selectedRows.clear();renderRows();saveData(true);return;}state.rows.splice(index,1);selectedRows.clear();renderRows();saveData(true);}
+
+function selectedIndexes(){return Array.from(selectedRows).filter(i=>state.rows[i]).sort((a,b)=>a-b);}
+function updateSelectedUi(){selectedRows=new Set(selectedIndexes());const count=selectedRows.size;const label=$('selectedCount');if(label)label.textContent='Выбрано: '+count;const del=$('deleteSelectedBtn'),price=$('setSelectedPriceBtn');if(del)del.disabled=count===0;if(price)price.disabled=count===0;const all=$('selectAllRows');if(all){all.checked=count>0&&count===state.rows.length;all.indeterminate=count>0&&count<state.rows.length;}document.querySelectorAll('[data-select-i]').forEach(cb=>{const i=+cb.dataset.selectI;cb.checked=selectedRows.has(i);const item=cb.closest('.item');if(item)item.classList.toggle('selected',selectedRows.has(i));});}
+function toggleRowSelection(index,checked){if(checked)selectedRows.add(index);else selectedRows.delete(index);updateSelectedUi();}
+function toggleSelectAll(checked){selectedRows.clear();if(checked)state.rows.forEach((_,i)=>selectedRows.add(i));updateSelectedUi();}
+function deleteSelectedRows(){const idxs=selectedIndexes();if(!idxs.length){alert('Сначала выберите строки.');return;}if(!confirm('Удалить выбранные строки: '+idxs.length+'?'))return;pushHistory();state.rows=state.rows.filter((_,i)=>!selectedRows.has(i));if(state.rows.length<MIN_ROWS)state.rows=[{w:'',l:'',p:''}];selectedRows.clear();renderRows();saveData(true);}
+function setSelectedPrice(){const idxs=selectedIndexes();if(!idxs.length){alert('Сначала выберите строки.');return;}const value=prompt('Введите новую цену/м² для выбранных строк:');if(value===null)return;const clean=sanitizeNumberString(value);const price=num(clean);if(!clean||price<=0){alert('Введите корректную цену больше 0.');return;}pushHistory();idxs.forEach(i=>{if(state.rows[i])state.rows[i].p=clean;});renderRows();saveData(true);}
+function sanitizeNumberString(value){let v=String(value||'').replace(',', '.').replace(/[^0-9.]/g,'');const firstDot=v.indexOf('.');if(firstDot!==-1){v=v.slice(0,firstDot+1)+v.slice(firstDot+1).replace(/\./g,'');}if(v.startsWith('.'))v='0'+v;if(v.length>12)v=v.slice(0,12);return v;}
+function sanitizeNumberInput(input){const old=input.value;const clean=sanitizeNumberString(old);if(old!==clean)input.value=clean;input.classList.toggle('invalid',clean!==''&&num(clean)<=0);return clean;}
+
 
 function printPage(){
   saveData(true);
@@ -145,12 +174,49 @@ function isIOS(){return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator
 function cleanPdfName(filename){let name=(filename||'plisse_calculation.pdf').trim();name=name.replace(/\.html?$/i,'').replace(/\.pdf$/i,'');if(!name)name='plisse_calculation';return name+'.pdf';}
 function blobToDataUrl(blob){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(blob);});}
 async function downloadPdfBlob(blob,filename){const cleanName=cleanPdfName(filename);const pdfBlob=blob.type==='application/pdf'?blob:new Blob([blob],{type:'application/pdf'});const dataUrl=await blobToDataUrl(pdfBlob);const a=document.createElement('a');a.href=dataUrl;a.download=cleanName;a.rel='noopener';a.type='application/pdf';a.style.display='none';document.body.appendChild(a);a.click();a.remove();if(isIOS()){setTimeout(()=>{const url=URL.createObjectURL(pdfBlob);window.open(url,'_blank');setTimeout(()=>URL.revokeObjectURL(url),60000);},250);}}
-async function savePdf(e){if(e){e.preventDefault();e.stopPropagation();}saveData(true);const blob=createPdfBlob();await downloadPdfBlob(blob,pdfFileName());}
-async function sharePdf(e){if(e){e.preventDefault();e.stopPropagation();}saveData(true);const blob=createPdfBlob();const file=new File([blob],cleanPdfName(pdfFileName()),{type:'application/pdf'});if(navigator.canShare&&navigator.canShare({files:[file]})&&navigator.share){try{await navigator.share({title:'Калькулятор Плиссе',text:'PDF расчет стоимости плиссе',files:[file]});return;}catch(err){if(err.name==='AbortError')return;}}await downloadPdfBlob(blob,pdfFileName());alert('Браузер не поддерживает прямую отправку PDF. Файл сохранен как PDF — отправьте его через WhatsApp или Telegram вручную.');}
+
+function escapeHtml(v){return String(v||'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));}
+function pdfPrintHtml(){const rows=rowsForPdf();let total=0,areaTotal=0,billableTotal=0,count=0;const bodyRows=rows.map(r=>{total+=r.sum;areaTotal+=r.area;billableTotal+=r.billable;if(r.complete)count++;return `<tr><td>${r.n}</td><td>${escapeHtml(r.w||'')}</td><td>${escapeHtml(r.l||'')}</td><td>${r.area?r.area.toFixed(2):''}</td><td>${escapeHtml(r.p||'')}</td><td>${r.billable?r.billable.toFixed(2):''}</td><td>${r.sum?money(r.sum):''}</td></tr>`;}).join('');return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>${escapeHtml(pdfFileName())}</title><style>body{font-family:Arial,Helvetica,sans-serif;color:#111827;margin:24px}.head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:18px}h1{font-size:24px;margin:0 0 4px}.sub{color:#6b7280;font-size:13px}.info,.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.box{border:1px solid #d7dee8;border-radius:8px;padding:9px}.label{font-size:12px;color:#6b7280;margin-bottom:4px}.value{font-size:16px;font-weight:700}table{width:100%;border-collapse:collapse;margin-top:14px;font-size:12px}th,td{border:1px solid #d7dee8;padding:6px;text-align:center}th{background:#1f2937;color:#fff}.note{font-size:11px;color:#6b7280;margin-top:14px}@media print{body{margin:10mm}.no-print{display:none}.box{break-inside:avoid}th{background:#1f2937!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body><div class="head"><div><h1>Калькулятор Плиссе</h1><div class="sub">Текстовая PDF-версия расчета</div></div><button class="no-print" onclick="window.print()">Сохранить / печать PDF</button></div><div class="info"><div class="box"><div class="label">Клиент</div><div class="value">${escapeHtml($('client').value)||'—'}</div></div><div class="box"><div class="label">Номер заказа</div><div class="value">${escapeHtml($('order').value)||'—'}</div></div><div class="box"><div class="label">Дата</div><div class="value">${escapeHtml($('date').value)||'—'}</div></div><div class="box"><div class="label">Менеджер</div><div class="value">${escapeHtml($('manager').value)||'—'}</div></div></div><table><thead><tr><th>№</th><th>Ширина, см</th><th>Длина, см</th><th>Квадратура, м²</th><th>Цена/м²</th><th>К расчету, м²</th><th>Сумма</th></tr></thead><tbody>${bodyRows}</tbody></table><div class="summary"><div class="box"><div class="label">Всего изделий</div><div class="value">${count}</div></div><div class="box"><div class="label">Общая квадратура</div><div class="value">${areaTotal.toFixed(2)} м²</div></div><div class="box"><div class="label">К расчету</div><div class="value">${billableTotal.toFixed(2)} м²</div></div><div class="box"><div class="label">Итого</div><div class="value">${money(total)} сом</div></div></div><div class="note">Формула: квадратура = ширина × длина / 10000. Если изделие меньше 1 м², расчет идет как за 1 м².</div><script>setTimeout(()=>window.print(),300)<\/script></body></html>`;}
+function openTextPdfWindow(){const html=pdfPrintHtml();const win=window.open('','_blank');if(!win){alert('Разрешите всплывающие окна, чтобы открыть PDF-версию.');return;}win.document.open();win.document.write(html);win.document.close();}
+
+async function savePdf(e){if(e){e.preventDefault();e.stopPropagation();}saveData(true);openTextPdfWindow();}
+async function sharePdf(e){if(e){e.preventDefault();e.stopPropagation();}saveData(true);openTextPdfWindow();alert('Откроется текстовая PDF-версия. Сохраните ее как PDF, затем отправьте через WhatsApp или Telegram.');}
 function isDesktopMode(){return window.matchMedia('(min-width: 992px)').matches;}
+function activeViewSelector(){return isDesktopMode()?'.desktop-view':'.mobile-view';}
+function focusCell(rowIndex,key){const next=document.querySelector(`${activeViewSelector()} input[data-i="${rowIndex}"][data-k="${key}"]`);if(next){next.focus();next.select();}}
 function focusDesktopCell(rowIndex,key){const next=document.querySelector(`.desktop-view input.cell[data-i="${rowIndex}"][data-k="${key}"]`);if(next){next.focus();next.select();}}
-document.addEventListener('keydown',e=>{if(!isDesktopMode())return;const t=e.target;if(!t.matches('.desktop-view input.cell[data-i][data-k]'))return;const editableKeys=['w','l','p'];const currentRow=Number(t.dataset.i);const currentKey=t.dataset.k;const currentCol=editableKeys.indexOf(currentKey);if(e.key==='Enter'||e.key==='ArrowDown'){e.preventDefault();focusDesktopCell(Math.min(currentRow+1,state.rows.length-1),currentKey);return;}if(e.key==='ArrowUp'){e.preventDefault();focusDesktopCell(Math.max(currentRow-1,0),currentKey);return;}if(e.key==='ArrowRight'){e.preventDefault();focusDesktopCell(currentRow,editableKeys[Math.min(currentCol+1,editableKeys.length-1)]);return;}if(e.key==='ArrowLeft'){e.preventDefault();focusDesktopCell(currentRow,editableKeys[Math.max(currentCol-1,0)]);return;}});
-document.addEventListener('input',e=>{if(e.target.matches('input[data-i][data-k]')){const i=+e.target.dataset.i;if(state.rows[i]){state.rows[i][e.target.dataset.k]=e.target.value;syncInputs();recalc();}}else if(e.target.matches('#client,#order,#date,#manager')){saveData(true);}});
+function orderedInputs(){return Array.from(document.querySelectorAll(`${activeViewSelector()} input[data-i][data-k]`));}
+function moveSequential(from,step=1){const inputs=orderedInputs();const pos=inputs.indexOf(from);if(pos<0)return false;const next=inputs[Math.max(0,Math.min(inputs.length-1,pos+step))];if(next&&next!==from){next.focus();next.select();}return true;}
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.key.toLowerCase()==='z'){e.preventDefault();undo();return;}
+  if(((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y')||((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.key.toLowerCase()==='z')){e.preventDefault();redo();return;}
+  const t=e.target;
+  if(!t.matches('input[data-i][data-k]'))return;
+  const editableKeys=['w','l','p'];
+  const currentRow=Number(t.dataset.i);
+  const currentKey=t.dataset.k;
+  const currentCol=editableKeys.indexOf(currentKey);
+  if(e.key==='Enter'){e.preventDefault();moveSequential(t,1);return;}
+  if(e.key==='Tab'){e.preventDefault();moveSequential(t,e.shiftKey?-1:1);return;}
+  if(!isDesktopMode())return;
+  if(e.key==='ArrowDown'){e.preventDefault();focusDesktopCell(Math.min(currentRow+1,state.rows.length-1),currentKey);return;}
+  if(e.key==='ArrowUp'){e.preventDefault();focusDesktopCell(Math.max(currentRow-1,0),currentKey);return;}
+  if(e.key==='ArrowRight'){e.preventDefault();if(currentCol===editableKeys.length-1)focusDesktopCell(Math.min(currentRow+1,state.rows.length-1),editableKeys[0]);else focusDesktopCell(currentRow,editableKeys[currentCol+1]);return;}
+  if(e.key==='ArrowLeft'){e.preventDefault();if(currentCol===0)focusDesktopCell(Math.max(currentRow-1,0),editableKeys[editableKeys.length-1]);else focusDesktopCell(currentRow,editableKeys[currentCol-1]);return;}
+});
+document.addEventListener('focusin',e=>{if(e.target.matches('input[data-i][data-k],#client,#order,#date,#manager')){activeEditSnapshot=snapshot();activeEditSaved=false;}});
+document.addEventListener('input',e=>{
+  if(e.target.matches('input[data-i][data-k]')){
+    if(!activeEditSaved){pushHistorySnapshot(activeEditSnapshot);activeEditSaved=true;}
+    const i=+e.target.dataset.i,k=e.target.dataset.k;
+    const clean=sanitizeNumberInput(e.target);
+    if(state.rows[i]){state.rows[i][k]=clean;syncSameField(i,k,e.target);updateRowDisplay(i);updateTotals();}
+  }else if(e.target.matches('#client,#order,#date,#manager')){
+    if(!activeEditSaved){pushHistorySnapshot(activeEditSnapshot);activeEditSaved=true;}
+    saveData(true);
+  }
+});
+document.addEventListener('blur',e=>{if(e.target.matches('input[data-i][data-k]')){const clean=sanitizeNumberInput(e.target);if(clean.endsWith('.')){e.target.value=clean.slice(0,-1);e.target.dispatchEvent(new Event('input',{bubbles:true}));}}},true);
 window.addEventListener('beforeunload',()=>saveData(true));
 loadData(false);
 </script>
