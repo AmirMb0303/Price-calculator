@@ -20,12 +20,9 @@
     .card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.04);overflow:hidden}
     .info{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;border-bottom:1px solid var(--line)}
     .field label{display:block;color:var(--muted);font-size:12px;margin-bottom:4px;text-align:center}
-    input,select{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px;font-size:14px;background:#fff;text-align:center}
-    select{appearance:auto;cursor:pointer}
-    .price-warning{color:var(--danger);font-weight:800;font-size:12px}
-    .top-summary{position:sticky;top:0;z-index:6;background:var(--bg);padding:0 0 10px}
-    input:focus,select:focus{outline:3px solid rgba(37,99,235,.18);border-color:var(--accent)}
-    input.invalid,select.invalid{border-color:var(--danger)!important;background:#fff7f7!important;outline:2px solid rgba(220,38,38,.18)!important}
+    input{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px;font-size:14px;background:#fff;text-align:center}
+    input:focus{outline:3px solid rgba(37,99,235,.18);border-color:var(--accent)}
+    input.invalid{border-color:var(--danger)!important;background:#fff7f7!important;outline:2px solid rgba(220,38,38,.18)!important}
     .row-actions{display:flex;gap:8px;justify-content:flex-end;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);background:#fff}
     .desktop-view{display:block}.mobile-view{display:none}
     .table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:900px}
@@ -47,7 +44,7 @@
 }
 .summary .box.total-top .label{color:#ffffff !important;}
 .summary .box.total-top .value{color:#ffffff !important;}
-@media (max-width:991px){body{font-size:16px}.wrap{max-width:640px;padding:12px 12px 28px}.top{position:sticky;top:0;z-index:10;margin:-12px -12px 12px;padding:14px 12px 12px;background:rgba(243,245,247,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:block}h1{font-size:21px}.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}.actions button{min-height:46px;border-radius:12px;font-size:15px;padding:12px 8px}.desktop-view{display:none}.mobile-view{display:block}.card{box-shadow:none;border-radius:16px}.info{grid-template-columns:1fr 1fr;padding:12px}.info input,.info select{font-size:17px;min-height:48px;border-radius:12px}.summary{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.summary .box{padding:10px}.summary .box .value{font-size:18px}.summary .box.total-top{grid-column:span 2;background:#111827;color:#fff}.top-summary{top:96px}.summary .box.total-top .label{color:#d1d5db}.row-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px}.row-actions button{min-height:46px;border-radius:12px;font-size:15px}.note{padding:0 14px 14px}}
+@media (max-width:991px){body{font-size:16px}.wrap{max-width:640px;padding:12px 12px 28px}.top{position:sticky;top:0;z-index:10;margin:-12px -12px 12px;padding:14px 12px 12px;background:rgba(243,245,247,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:block}h1{font-size:21px}.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}.actions button{min-height:46px;border-radius:12px;font-size:15px;padding:12px 8px}.desktop-view{display:none}.mobile-view{display:block}.card{box-shadow:none;border-radius:16px}.info{grid-template-columns:1fr 1fr;padding:12px}.info input{font-size:17px;min-height:48px;border-radius:12px}.summary{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.summary .box{padding:10px}.summary .box .value{font-size:18px}.summary .box.total-top{grid-column:span 2;background:#111827;color:#fff}.summary .box.total-top .label{color:#d1d5db}.row-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px}.row-actions button{min-height:46px;border-radius:12px;font-size:15px}.note{padding:0 14px 14px}}
     @media(max-width:380px){.actions{grid-template-columns:1fr 1fr}.actions .danger{grid-column:span 2}.summary{grid-template-columns:1fr}.summary .box.total-top{grid-column:span 1}.fields{grid-template-columns:1fr 1fr}.fields .price-wrap{grid-column:span 2}}
 
     /* Mobile summary layout: 2x2, total in second row right, same size as others */
@@ -84,13 +81,13 @@
         grid-column:auto !important;
       }
     }
-    @media print{body{background:#fff}.top-summary{position:static!important;padding:0!important}.wrap{max-width:none;padding:0}.top{position:static;margin:0 0 8px;padding:0;border:0;background:#fff}.actions,.mobile-view,.note,.row-actions,.del-col,.del-cell{display:none!important}.desktop-view{display:block}.card{border:0;box-shadow:none;border-radius:0}.info{grid-template-columns:repeat(4,1fr)}th{position:static;background:#fff;color:#000}input{border:0!important}.table-wrap{overflow:visible}table{min-width:0;font-size:11px}th,td{height:26px;padding:3px}.summary{display:grid;page-break-inside:avoid}}
+    @media print{body{background:#fff}.wrap{max-width:none;padding:0}.top{position:static;margin:0 0 8px;padding:0;border:0;background:#fff}.actions,.mobile-view,.note,.row-actions,.del-col,.del-cell{display:none!important}.desktop-view{display:block}.card{border:0;box-shadow:none;border-radius:0}.info{grid-template-columns:repeat(4,1fr)}th{position:static;background:#fff;color:#000}input{border:0!important}.table-wrap{overflow:visible}table{min-width:0;font-size:11px}th,td{height:26px;padding:3px}.summary{display:grid;page-break-inside:avoid}}
   </style>
 </head>
 <body>
 <div class="wrap">
   <div class="top">
-    <div><h1>Калькулятор Плиссе</h1><div class="sub">Один файл: WEB-версия для компьютера и мобильная версия для iOS / Android</div></div>
+    <div><h1>Калькулятор Плиссе</h1></div>
     <div class="actions" id="mainActions"><button type="button" class="secondary" onclick="printPage()">Печать</button><button type="button" class="secondary" onclick="savePdf(event)">Сохранить в PDF</button><button type="button" class="secondary" onclick="sharePdf(event)">Поделиться PDF</button><button type="button" class="danger" onclick="clearAll()">Очистить</button></div>
   </div>
   <div class="summary top-summary">
@@ -103,7 +100,7 @@
     <div class="info">
       <div class="field"><label>Клиент</label><input id="client" placeholder="Имя клиента"></div>
       <div class="field"><label>Ткань</label><input id="fabric" placeholder="Вид ткани"></div>
-      <div class="field"><label>Профиль</label><select id="profile"><option value="">Выберите цвет</option><option value="белый">белый</option><option value="серый">серый</option><option value="антрацит">антрацит</option><option value="коричневый">коричневый</option></select></div>
+      <div class="field"><label>Профиль</label><input id="profile" placeholder="Цвет профиля"></div>
       <div class="field"><label>Дата</label><input id="date" type="date"></div>
     </div>
     <div class="row-actions"><button type="button" class="ok" onclick="addRow()">Добавить строку</button><button type="button" class="secondary" onclick="deleteLastRow()">Удалить строку</button></div>
@@ -117,7 +114,6 @@ const STORE='plisseSalesCalcResponsiveOneFile';
 const MIN_ROWS=1;
 const DEFAULT_ROWS=29;
 const state={rows:Array.from({length:DEFAULT_ROWS},()=>({w:'',l:'',p:''}))};
-let rowCalcCache=[];
 const undoStack=[];
 const redoStack=[];
 const HISTORY_LIMIT=80;
@@ -127,16 +123,14 @@ let activeEditSaved=false;
 const $=id=>document.getElementById(id);
 function money(n){return Number(n||0).toLocaleString('ru-RU',{maximumFractionDigits:0});}
 function num(v){return parseFloat(String(v||'').replace(',','.'))||0;}
-function calcRow(r){const w=num(r.w),l=num(r.l),p=num(r.p),has=w>0||l>0||p>0,hasSize=w>0&&l>0,missingPrice=hasSize&&p<=0,complete=hasSize&&p>0,area=hasSize?w*l/10000:0,billable=complete?Math.max(area,1):0,sum=complete?billable*p:0;return{w,l,p,has,hasSize,missingPrice,complete,area,billable,sum};}
-function setFieldInvalid(i,k,isInvalid,title=''){document.querySelectorAll(`input[data-i="${i}"][data-k="${k}"]`).forEach(inp=>{inp.classList.toggle('invalid',!!isInvalid);inp.title=isInvalid?title:'';});}
-function updateRowValidation(i,c){const hasAny=c.has;setFieldInvalid(i,'w',hasAny&&c.w<=0,'Укажите ширину');setFieldInvalid(i,'l',hasAny&&c.l<=0,'Укажите длину');setFieldInvalid(i,'p',c.hasSize&&c.p<=0,'Цена не указана');}
+function calcRow(r){const w=num(r.w),l=num(r.l),p=num(r.p),has=w>0||l>0||p>0,hasSize=w>0&&l>0,complete=hasSize&&p>0,area=hasSize?w*l/10000:0,billable=complete?Math.max(area,1):0,sum=complete?billable*p:0;return{w,l,p,has,hasSize,complete,area,billable,sum};}
 function makeDesktopRow(i){const idx=i-1;const tr=document.createElement('tr');tr.innerHTML=`<td class="num">${i}</td><td><input class="cell width" data-i="${idx}" data-k="w" inputmode="decimal" autocomplete="off"></td><td><input class="cell length" data-i="${idx}" data-k="l" inputmode="decimal" autocomplete="off"></td><td class="readonly area" data-i="${idx}"></td><td><input class="cell price" data-i="${idx}" data-k="p" inputmode="decimal" autocomplete="off"></td><td class="readonly money sum" data-i="${idx}"></td><td class="del-cell"><button type="button" class="small-btn icon-del" onclick="deleteRow(${idx})">×</button></td>`;return tr;}
 function makeMobileCard(i){const idx=i-1;const div=document.createElement('div');div.className='item';div.innerHTML=`<div class="item-head"><div class="item-num">Изделие №${i}</div><div style="display:flex;gap:8px;align-items:center"><div class="mini-sum"><span class="sum" data-i="${idx}"></span><span class="sum-unit" data-i="${idx}"></span></div><button type="button" class="small-btn icon-del" onclick="deleteRow(${idx})">×</button></div></div><div class="fields"><div><label>Ширина, см</label><input data-i="${idx}" data-k="w" inputmode="decimal" autocomplete="off"></div><div><label>Длина, см</label><input data-i="${idx}" data-k="l" inputmode="decimal" autocomplete="off"></div><div class="price-wrap"><label>Цена/м²</label><input data-i="${idx}" data-k="p" inputmode="decimal" autocomplete="off"></div></div><div class="calc"><div class="calcbox"><div class="label">Квадратура</div><div class="value"><span class="area" data-i="${idx}"></span><span class="area-unit" data-i="${idx}"></span></div></div><div class="calcbox"><div class="label">К расчету</div><div class="value"><span class="billable" data-i="${idx}">0.00</span> м²</div></div></div>`;return div;}
 function renderRows(){const tbody=$('calcTable').querySelector('tbody');const items=$('items');tbody.innerHTML='';items.innerHTML='';state.rows.forEach((_,idx)=>{tbody.appendChild(makeDesktopRow(idx+1));items.appendChild(makeMobileCard(idx+1));});syncInputs();recalc();}
 function syncInputs(){document.querySelectorAll('input[data-i][data-k]').forEach(inp=>{const r=state.rows[+inp.dataset.i];if(!r)return;const v=r[inp.dataset.k]||'';if(inp.value!==v)inp.value=v;});}
-function updateRowDisplay(i){const r=state.rows[i];if(!r)return;const c=calcRow(r);rowCalcCache[i]=c;updateRowValidation(i,c);document.querySelectorAll(`.area[data-i="${i}"]`).forEach(e=>e.textContent=c.hasSize?c.area.toFixed(2):'');document.querySelectorAll(`.area-unit[data-i="${i}"]`).forEach(e=>e.textContent=c.hasSize?' м²':'');document.querySelectorAll(`.billable[data-i="${i}"]`).forEach(e=>e.textContent=c.complete?c.billable.toFixed(2):'');document.querySelectorAll(`.sum[data-i="${i}"]`).forEach(e=>{e.textContent=c.complete?money(c.sum):(c.missingPrice?'Цена не указана':'');e.classList.toggle('price-warning',c.missingPrice);});document.querySelectorAll(`.sum-unit[data-i="${i}"]`).forEach(e=>e.textContent=c.complete?' сом':'');}
-function updateTotals(){let total=0,areaTotal=0,billableTotal=0,count=0;rowCalcCache.forEach(c=>{if(!c)return;total+=c.sum;areaTotal+=c.area;billableTotal+=c.billable;if(c.complete)count++;});$('itemsCount').textContent=count;$('areaTotal').textContent=areaTotal.toFixed(2);$('billableAreaTotal').textContent=billableTotal.toFixed(2);$('totalBox').textContent=money(total);saveData(true);}
-function recalc(){rowCalcCache=new Array(state.rows.length);state.rows.forEach((_,i)=>updateRowDisplay(i));updateTotals();}
+function updateRowDisplay(i){const r=state.rows[i];if(!r)return;const c=calcRow(r);document.querySelectorAll(`.area[data-i="${i}"]`).forEach(e=>e.textContent=c.hasSize?c.area.toFixed(2):'');document.querySelectorAll(`.area-unit[data-i="${i}"]`).forEach(e=>e.textContent=c.hasSize?' м²':'');document.querySelectorAll(`.billable[data-i="${i}"]`).forEach(e=>e.textContent=c.complete?c.billable.toFixed(2):'');document.querySelectorAll(`.sum[data-i="${i}"]`).forEach(e=>e.textContent=c.complete?money(c.sum):'');document.querySelectorAll(`.sum-unit[data-i="${i}"]`).forEach(e=>e.textContent=c.complete?' сом':'');}
+function updateTotals(){let total=0,areaTotal=0,billableTotal=0,count=0;state.rows.forEach(r=>{const c=calcRow(r);total+=c.sum;areaTotal+=c.area;billableTotal+=c.billable;if(c.complete)count++;});$('itemsCount').textContent=count;$('areaTotal').textContent=areaTotal.toFixed(2);$('billableAreaTotal').textContent=billableTotal.toFixed(2);$('totalBox').textContent=money(total);saveData(true);}
+function recalc(){state.rows.forEach((_,i)=>updateRowDisplay(i));updateTotals();}
 function syncSameField(i,k,source){document.querySelectorAll(`input[data-i="${i}"][data-k="${k}"]`).forEach(inp=>{if(inp!==source&&inp.value!==source.value)inp.value=source.value;});}
 function snapshot(){return JSON.stringify(collect());}
 function pushHistorySnapshot(snap){if(isRestoringHistory||!snap)return;const current=snapshot();if(snap===current)return;if(undoStack[undoStack.length-1]!==snap){undoStack.push(snap);if(undoStack.length>HISTORY_LIMIT)undoStack.shift();}redoStack.length=0;}
