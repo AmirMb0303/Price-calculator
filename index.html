@@ -28,10 +28,10 @@
     .desktop-view{display:block}.mobile-view{display:none}
     .table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:900px}
     th,td{border:1px solid var(--line);padding:6px;text-align:center;vertical-align:middle;height:38px}
-    th{background:var(--head);color:var(--headText);font-size:13px;position:sticky;top:0;z-index:1}
+    th{background:var(--head);color:var(--headText);font-size:14px;position:sticky;top:0;z-index:1}
     td.num{width:44px;color:var(--muted);background:#f9fafb}.del-cell{width:54px;background:#fff}
-    input.cell{width:100%;height:30px;border:1px solid transparent;border-radius:5px;text-align:center;font-size:14px;background:transparent;padding:4px}
-    input.cell:focus{outline:2px solid rgba(37,99,235,.25);border-color:var(--accent);background:#fff}.readonly{background:#f9fafb;font-weight:700;text-align:center;vertical-align:middle}.money{font-weight:700;text-align:center}
+    input.cell{width:100%;height:30px;border:1px solid transparent;border-radius:5px;text-align:center;font-size:15px;background:transparent;padding:4px}
+    input.cell:focus{outline:2px solid rgba(37,99,235,.25);border-color:var(--accent);background:#fff}.readonly{background:#f9fafb;font-weight:700;text-align:center;vertical-align:middle;font-size:15px!important;font-family:Calibri, Arial, Helvetica, sans-serif;line-height:30px}.money{font-weight:700;text-align:center;font-size:15px!important;font-family:Calibri, Arial, Helvetica, sans-serif;line-height:30px}.area,.sum{font-size:15px!important;font-weight:700;font-family:Calibri, Arial, Helvetica, sans-serif}
     .small-btn{min-height:28px;padding:4px 8px;border-radius:7px;font-size:12px}.icon-del{background:#fee2e2;color:#991b1b}
     .items{display:flex;flex-direction:column;gap:10px;padding:12px}.item{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 2px 7px rgba(0,0,0,.035)}
     .item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.item-num{font-weight:800}.mini-sum{font-size:17px;font-weight:800}
@@ -116,6 +116,70 @@
 
 
 
+select{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:9px;
+  font-size:17px;
+  font-weight:700;
+  background:#fff;
+  text-align:center;
+  min-height:48px;
+}
+select:focus{
+  outline:3px solid rgba(37,99,235,.18);
+  border-color:var(--accent);
+}
+
+
+.select-wrap{
+  position:relative;
+  width:100%;
+}
+.select-wrap::after{
+  content:"";
+  position:absolute;
+  right:14px;
+  top:50%;
+  width:8px;
+  height:8px;
+  border-right:2px solid #111827;
+  border-bottom:2px solid #111827;
+  transform:translateY(-68%) rotate(45deg);
+  pointer-events:none;
+}
+.select-wrap select{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:9px 42px;
+  background:#fff;
+  font:inherit;
+  color:inherit;
+  text-align:center;
+  text-align-last:center;
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  outline:none;
+  cursor:pointer;
+}
+.select-wrap select:focus{
+  outline:3px solid rgba(37,99,235,.18);
+  border-color:var(--accent);
+}
+.select-wrap select::-ms-expand{
+  display:none;
+}
+
+
+.select-wrap select.placeholder{
+  color:var(--muted);
+}
+.select-wrap select:not(.placeholder){
+  color:var(--text);
+}
 
 </style>
 </head>
@@ -135,7 +199,18 @@
     <div class="info">
       <div class="field"><label>Клиент</label><input id="client" placeholder="Имя клиента"></div>
       <div class="field"><label>Ткань</label><input id="fabric" placeholder="Вид ткани"></div>
-      <div class="field"><label>Профиль</label><input id="profile" placeholder="Цвет профиля"></div>
+      <div class="field">
+<label>Профиль</label>
+<div class="select-wrap">
+<select id="profile">
+<option value="">Выберите цвет</option>
+<option>Белый</option>
+<option>Серый</option>
+<option>Антрацит</option>
+<option>Коричневый</option>
+</select>
+</div>
+</div>
       <div class="field"><label>Дата</label><input id="date" type="date"></div>
     </div>
     <div class="row-actions"><button type="button" class="ok" onclick="addRow()">Добавить строку</button><button type="button" class="secondary" onclick="deleteLastRow()">Удалить строку</button></div>
@@ -257,8 +332,17 @@ if(e.target&&e.target.id==='paymentStatus')updatePaymentBox();
 });
 updatePaymentBox();
 
-loadData(false);
+function updateProfilePlaceholderStyle(){
+  const select=document.getElementById('profile');
+  if(!select)return;
+  select.classList.toggle('placeholder',!select.value);
+}
+document.addEventListener('change',e=>{
+  if(e.target&&e.target.id==='profile')updateProfilePlaceholderStyle();
+});
 
+loadData(false);
+updateProfilePlaceholderStyle();
 </script>
 </body>
 </html>
