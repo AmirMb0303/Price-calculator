@@ -151,17 +151,15 @@ select:focus{
 }
 .select-wrap select{
   width:100%;
-  height:auto;
-  min-height:0;
   border:1px solid var(--line);
   border-radius:9px;
   padding:9px 42px;
-  font-size:14px;
-  line-height:1.2;
-  font-weight:600;
-  font-family:Calibri,Arial,Helvetica,sans-serif;
-  color:var(--text);
   background:#fff;
+  font-family:Calibri, Arial, Helvetica, sans-serif;
+  font-size:17px;
+  font-weight:700;
+  line-height:normal;
+  color:var(--text);
   text-align:center;
   text-align-last:center;
   appearance:none;
@@ -186,6 +184,81 @@ select:focus{
   color:var(--text);
 }
 
+
+.custom-select{
+  position:relative;
+  width:100%;
+}
+.custom-select-button{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:9px 42px 9px 9px;
+  font-family:Calibri, Arial, Helvetica, sans-serif;
+  font-size:17px;
+  font-weight:700;
+  line-height:normal;
+  background:#fff;
+  color:var(--text);
+  text-align:center;
+  min-height:0;
+  cursor:pointer;
+  position:relative;
+}
+.custom-select-button.placeholder{
+  color:var(--muted);
+}
+.custom-select-button:focus{
+  outline:3px solid rgba(37,99,235,.18);
+  border-color:var(--accent);
+}
+.custom-select-arrow{
+  position:absolute;
+  right:14px;
+  top:50%;
+  width:8px;
+  height:8px;
+  border-right:2px solid #111827;
+  border-bottom:2px solid #111827;
+  transform:translateY(-68%) rotate(45deg);
+  pointer-events:none;
+}
+.custom-select-menu{
+  display:none;
+  position:absolute;
+  z-index:1000;
+  left:0;
+  right:0;
+  top:calc(100% + 5px);
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:9px;
+  box-shadow:0 8px 20px rgba(0,0,0,.12);
+  overflow:hidden;
+}
+.custom-select.open .custom-select-menu{
+  display:block;
+}
+.custom-select-option{
+  display:block;
+  width:100%;
+  padding:10px 12px;
+  border:0;
+  border-radius:0;
+  background:#fff;
+  color:var(--text);
+  font-family:Calibri, Arial, Helvetica, sans-serif;
+  font-size:17px;
+  font-weight:700;
+  text-align:center;
+  min-height:0;
+}
+.custom-select-option:hover,
+.custom-select-option:focus{
+  background:#f3f4f6;
+  outline:none;
+}
+
 </style>
 </head>
 <body>
@@ -206,14 +279,18 @@ select:focus{
       <div class="field"><label>Ткань</label><input id="fabric" placeholder="Вид ткани"></div>
       <div class="field">
 <label>Профиль</label>
-<div class="select-wrap">
-<select id="profile">
-<option value="">Выберите цвет</option>
-<option>Белый</option>
-<option>Серый</option>
-<option>Антрацит</option>
-<option>Коричневый</option>
-</select>
+<div class="custom-select" id="profileSelect">
+  <input type="hidden" id="profile" value="">
+  <button type="button" class="custom-select-button placeholder" id="profileButton" aria-haspopup="listbox" aria-expanded="false">
+    <span id="profileButtonText">Выберите цвет</span>
+    <span class="custom-select-arrow" aria-hidden="true"></span>
+  </button>
+  <div class="custom-select-menu" id="profileMenu" role="listbox">
+    <button type="button" class="custom-select-option" data-value="Белый">Белый</button>
+    <button type="button" class="custom-select-option" data-value="Серый">Серый</button>
+    <button type="button" class="custom-select-option" data-value="Антрацит">Антрацит</button>
+    <button type="button" class="custom-select-option" data-value="Коричневый">Коричневый</button>
+  </div>
 </div>
 </div>
       <div class="field"><label>Дата</label><input id="date" type="date"></div>
@@ -254,7 +331,7 @@ function restoreSnapshot(snap){if(!snap)return;isRestoringHistory=true;apply(JSO
 function undo(){const current=snapshot();const prev=undoStack.pop();if(!prev)return;redoStack.push(current);restoreSnapshot(prev);}
 function redo(){const current=snapshot();const next=redoStack.pop();if(!next)return;undoStack.push(current);restoreSnapshot(next);}
 function collect(){return{client:$('client').value,fabric:$('fabric').value,profile:$('profile').value,date:$('date').value,rows:state.rows};}
-function apply(data){if(!data)data={};$('client').value=data.client||'';$('fabric').value=data.fabric||'';$('profile').value=data.profile||'';$('date').value=data.date||new Date().toISOString().slice(0,10);const rows=Array.isArray(data.rows)?data.rows:[];state.rows=(rows.length?rows:Array.from({length:DEFAULT_ROWS},()=>({}))).map(r=>({w:r.w||'',l:r.l||'',p:r.p||''}));if(state.rows.length<MIN_ROWS)state.rows.push({w:'',l:'',p:''});renderRows();}
+function apply(data){if(!data)data={};$('client').value=data.client||'';$('fabric').value=data.fabric||'';$('profile').value=data.profile||'';$('date').value=data.date||new Date().toISOString().slice(0,10);const rows=Array.isArray(data.rows)?data.rows:[];state.rows=(rows.length?rows:Array.from({length:DEFAULT_ROWS},()=>({}))).map(r=>({w:r.w||'',l:r.l||'',p:r.p||''}));if(state.rows.length<MIN_ROWS)state.rows.push({w:'',l:'',p:''});renderRows();syncProfileDropdown();}
 function saveData(silent=false){try{localStorage.setItem(STORE,JSON.stringify(collect()));if(!silent)alert('Расчет сохранен в этом браузере.');}catch(e){}}
 function loadData(showAlert=false){const raw=localStorage.getItem(STORE);if(raw){try{apply(JSON.parse(raw));if(showAlert)alert('Сохраненный расчет загружен.');return;}catch(e){}}apply({date:new Date().toISOString().slice(0,10),rows:Array.from({length:DEFAULT_ROWS},()=>({}))});}
 function clearAll(){if(!confirm('Очистить весь расчет?'))return;pushHistory();localStorage.removeItem(STORE);apply({date:new Date().toISOString().slice(0,10),rows:Array.from({length:DEFAULT_ROWS},()=>({}))});}
@@ -337,16 +414,12 @@ if(e.target&&e.target.id==='paymentStatus')updatePaymentBox();
 });
 updatePaymentBox();
 
-function updateProfilePlaceholderStyle(){
-  const select=document.getElementById('profile');
-  if(!select)return;
-  select.classList.toggle('placeholder',!select.value);
-}
-document.addEventListener('change',e=>{
-  if(e.target&&e.target.id==='profile')updateProfilePlaceholderStyle();
+
 });
 
 loadData(false);
+initProfileDropdown();
+syncProfileDropdown();
 updateProfilePlaceholderStyle();
 </script>
 </body>
