@@ -131,6 +131,44 @@ opacity:1 !important;
 
 
 
+
+/* Статусы заполнения строк */
+.desktop-view tr.row-complete td,
+.mobile-view .item.row-complete{
+  background:#ecfdf3 !important;
+}
+.desktop-view tr.row-warning td,
+.mobile-view .item.row-warning{
+  background:#fffbeb !important;
+}
+.desktop-view tr.row-error td,
+.mobile-view .item.row-error{
+  background:#fef2f2 !important;
+}
+.desktop-view tr.row-complete input.cell,
+.desktop-view tr.row-warning input.cell,
+.desktop-view tr.row-error input.cell{
+  background:transparent;
+}
+.desktop-view tr.row-complete td:first-child{
+  box-shadow:inset 4px 0 0 #16a34a;
+}
+.desktop-view tr.row-warning td:first-child{
+  box-shadow:inset 4px 0 0 #f59e0b;
+}
+.desktop-view tr.row-error td:first-child{
+  box-shadow:inset 4px 0 0 #dc2626;
+}
+.mobile-view .item.row-complete{
+  border-color:#86efac;
+}
+.mobile-view .item.row-warning{
+  border-color:#fcd34d;
+}
+.mobile-view .item.row-error{
+  border-color:#fca5a5;
+}
+
 </style>
 </head>
 <body>
@@ -177,7 +215,37 @@ function makeDesktopRow(i){const idx=i-1;const tr=document.createElement('tr');t
 function makeMobileCard(i){const idx=i-1;const div=document.createElement('div');div.className='item';div.innerHTML=`<div class="item-head"><div class="item-num">Изделие №${i}</div><div style="display:flex;gap:8px;align-items:center"><div class="mini-sum"><span class="sum" data-i="${idx}"></span><span class="sum-unit" data-i="${idx}"></span></div><button type="button" class="small-btn icon-del" onclick="deleteRow(${idx})">×</button></div></div><div class="fields"><div><label>Ширина, см</label><input data-i="${idx}" data-k="w" inputmode="decimal" autocomplete="off"></div><div><label>Длина, см</label><input data-i="${idx}" data-k="l" inputmode="decimal" autocomplete="off"></div><div class="price-wrap"><label>Цена/м²</label><input data-i="${idx}" data-k="p" inputmode="decimal" autocomplete="off"></div></div><div class="calc"><div class="calcbox"><div class="label">Квадратура</div><div class="value"><span class="area" data-i="${idx}"></span><span class="area-unit" data-i="${idx}"></span></div></div><div class="calcbox"><div class="label">К расчету</div><div class="value"><span class="billable" data-i="${idx}">0.00</span> м²</div></div></div>`;return div;}
 function renderRows(){const tbody=$('calcTable').querySelector('tbody');const items=$('items');tbody.innerHTML='';items.innerHTML='';state.rows.forEach((_,idx)=>{tbody.appendChild(makeDesktopRow(idx+1));items.appendChild(makeMobileCard(idx+1));});syncInputs();recalc();}
 function syncInputs(){document.querySelectorAll('input[data-i][data-k]').forEach(inp=>{const r=state.rows[+inp.dataset.i];if(!r)return;const v=r[inp.dataset.k]||'';if(inp.value!==v)inp.value=v;});}
-function updateRowDisplay(i){const r=state.rows[i];if(!r)return;const c=calcRow(r);document.querySelectorAll(`.area[data-i="${i}"]`).forEach(e=>e.value=c.hasSize?c.area.toFixed(2):"");document.querySelectorAll(`.area-unit[data-i="${i}"]`).forEach(e=>e.textContent=c.hasSize?' м²':'');document.querySelectorAll(`.billable[data-i="${i}"]`).forEach(e=>e.textContent=c.complete?c.billable.toFixed(2):'');document.querySelectorAll(`.sum[data-i="${i}"]`).forEach(e=>e.value=c.complete?money(c.sum):"");document.querySelectorAll(`.sum-unit[data-i="${i}"]`).forEach(e=>e.textContent=c.complete?' сом':'');}
+
+function updateRowStatus(i,c){
+  const row=state.rows[i];
+  if(!row)return;
+
+  const hasAny=String(row.w||'').trim()!=='' ||
+               String(row.l||'').trim()!=='' ||
+               String(row.p||'').trim()!=='';
+
+  let status='';
+  if(hasAny){
+    if(!c.w || !c.l){
+      status='row-error';
+    }else if(!c.p){
+      status='row-warning';
+    }else{
+      status='row-complete';
+    }
+  }
+
+  const desktopRow=document.querySelector(`.desktop-view input[data-i="${i}"]`)?.closest('tr');
+  const mobileItem=document.querySelector(`.mobile-view input[data-i="${i}"]`)?.closest('.item');
+
+  [desktopRow,mobileItem].forEach(el=>{
+    if(!el)return;
+    el.classList.remove('row-complete','row-warning','row-error');
+    if(status)el.classList.add(status);
+  });
+}
+
+function updateRowDisplay(i){const r=state.rows[i];if(!r)return;const c=calcRow(r);document.querySelectorAll(`.area[data-i="${i}"]`).forEach(e=>e.value=c.hasSize?c.area.toFixed(2):"");document.querySelectorAll(`.area-unit[data-i="${i}"]`).forEach(e=>e.textContent=c.hasSize?' м²':'');document.querySelectorAll(`.billable[data-i="${i}"]`).forEach(e=>e.textContent=c.complete?c.billable.toFixed(2):'');document.querySelectorAll(`.sum[data-i="${i}"]`).forEach(e=>e.value=c.complete?money(c.sum):"");document.querySelectorAll(`.sum-unit[data-i="${i}"]`).forEach(e=>e.textContent=c.complete?' сом':'');updateRowStatus(i,c);}
 function updateTotals(){let total=0,areaTotal=0,billableTotal=0,count=0;state.rows.forEach(r=>{const c=calcRow(r);total+=c.sum;areaTotal+=c.area;billableTotal+=c.billable;if(c.complete)count++;});$('itemsCount').textContent=count;const areaTotalEl=$('areaTotal');if(areaTotalEl)areaTotalEl.textContent=areaTotal.toFixed(2);$('billableAreaTotal').textContent=billableTotal.toFixed(2);$('totalBox').textContent=money(total);saveData(true);}
 function recalc(){state.rows.forEach((_,i)=>updateRowDisplay(i));updateTotals();}
 function syncSameField(i,k,source){document.querySelectorAll(`input[data-i="${i}"][data-k="${k}"]`).forEach(inp=>{if(inp!==source&&inp.value!==source.value)inp.value=source.value;});}
