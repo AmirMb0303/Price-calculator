@@ -82,7 +82,14 @@
       }
     }
     @media print{body{background:#fff}.wrap{max-width:none;padding:0}.top{position:static;margin:0 0 8px;padding:0;border:0;background:#fff}.actions,.mobile-view,.note,.row-actions,.del-col,.del-cell{display:none!important}.desktop-view{display:block}.card{border:0;box-shadow:none;border-radius:0}.info{grid-template-columns:repeat(4,1fr)}th{position:static;background:#fff;color:#000}input{border:0!important}.table-wrap{overflow:visible}table{min-width:0;font-size:11px}th,td{height:26px;padding:3px}.summary{display:grid;page-break-inside:avoid}}
-  </style>
+  
+.payment-box.paid{background:#16a34a!important;border-color:#16a34a!important;color:#fff!important;}
+.payment-box.paid .label,.payment-box.paid .value{color:#fff!important;}
+.payment-box.unpaid{background:#dc2626!important;border-color:#dc2626!important;color:#fff!important;}
+.payment-box.unpaid .label,.payment-box.unpaid .value{color:#fff!important;}
+#paymentStatus{color:inherit;background:transparent;border:none;font-weight:700;}
+
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -94,7 +101,7 @@
     <div class="box"><div class="label">Всего изделий</div><div class="value" id="itemsCount">0</div></div>
     <div class="box"><div class="label">К расчету по минимуму 1 м²</div><div class="value"><span id="billableAreaTotal">0.00</span> м²</div></div>
     <div class="box total-top"><div class="label">Итого</div><div class="value"><span id="totalBox">0</span> сом</div></div>
-    <div class="box"><div class="label">Оплачено</div><div class="value"><select id="paymentStatus" style="width:100%;font-size:16px;font-weight:700;border:none;background:transparent;text-align:center;outline:none;"><option>Неоплачено</option><option>Оплачено</option></select></div></div>
+    <div class="box payment-box unpaid" id="paymentBox"><div class="label">Оплачено</div><div class="value"><select id="paymentStatus" style="width:100%;font-size:16px;font-weight:700;border:none;background:transparent;text-align:center;outline:none;"><option>Неоплачено</option><option>Оплачено</option></select></div></div>
   </div>
   <div class="card">
     <div class="info">
@@ -209,6 +216,19 @@ document.addEventListener('input',e=>{
 });
 document.addEventListener('blur',e=>{if(e.target.matches('input[data-i][data-k]')){const clean=sanitizeNumberInput(e.target);if(clean.endsWith('.')){e.target.value=clean.slice(0,-1);e.target.dispatchEvent(new Event('input',{bubbles:true}));}}},true);
 window.addEventListener('beforeunload',()=>saveData(true));
+
+function updatePaymentBox(){
+ const box=document.getElementById('paymentBox');
+ const sel=document.getElementById('paymentStatus');
+ if(!box||!sel)return;
+ box.classList.remove('paid','unpaid');
+ box.classList.add(sel.value==='Оплачено'?'paid':'unpaid');
+}
+document.addEventListener('change',e=>{
+ if(e.target&&e.target.id==='paymentStatus') updatePaymentBox();
+});
+
+updatePaymentBox();
 loadData(false);
 </script>
 </body>
