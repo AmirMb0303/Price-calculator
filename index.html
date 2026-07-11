@@ -30,16 +30,22 @@
     th,td{border:1px solid var(--line);padding:6px;text-align:center;vertical-align:middle;height:38px}
     th{background:var(--head);color:var(--headText);font-size:14px;position:sticky;top:0;z-index:1}
     td.num{width:44px;color:var(--muted);background:#f9fafb}.del-cell{width:54px;background:#fff}
-    input.cell{width:100%;height:30px;border:1px solid transparent;border-radius:5px;text-align:center;font-size:15px;background:transparent;padding:4px}
-    input.cell:focus{outline:2px solid rgba(37,99,235,.25);border-color:var(--accent);background:#fff}.readonly{
-background:#f9fafb!important;
-font-size:15px!important;
-font-weight:700!important;
-font-family:Calibri,Arial,Helvetica,sans-serif!important;
+    input.cell{
+width:100%;
+height:30px;
+border:1px solid transparent;
+border-radius:5px;
 text-align:center;
-border:1px solid transparent!important;
-cursor:default;
-}.money{font-weight:700;text-align:center;font-size:15px!important;font-family:Calibri, Arial, Helvetica, sans-serif;line-height:30px}.area,.sum{font-size:15px!important;font-weight:700;font-family:Calibri, Arial, Helvetica, sans-serif}
+font:700 15px Calibri, Arial, Helvetica, sans-serif;
+background:transparent;
+padding:4px;
+}
+    input.cell:focus{outline:2px solid rgba(37,99,235,.25);border-color:var(--accent);background:#fff}.readonly,.money,.area,.sum{
+font:700 15px Calibri, Arial, Helvetica, sans-serif !important;
+color:#111827 !important;
+opacity:1 !important;
+-webkit-text-fill-color:#111827 !important;
+}
     .small-btn{min-height:28px;padding:4px 8px;border-radius:7px;font-size:12px}.icon-del{background:#fee2e2;color:#991b1b}
     .items{display:flex;flex-direction:column;gap:10px;padding:12px}.item{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 2px 7px rgba(0,0,0,.035)}
     .item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.item-num{font-weight:800}.mini-sum{font-size:17px;font-weight:800}
@@ -167,7 +173,7 @@ const $=id=>document.getElementById(id);
 function money(n){return Number(n||0).toLocaleString('ru-RU',{maximumFractionDigits:0});}
 function num(v){return parseFloat(String(v||'').replace(',','.'))||0;}
 function calcRow(r){const w=num(r.w),l=num(r.l),p=num(r.p),has=w>0||l>0||p>0,hasSize=w>0&&l>0,complete=hasSize&&p>0,area=hasSize?w*l/10000:0,billable=complete?Math.max(area,1):0,sum=complete?billable*p:0;return{w,l,p,has,hasSize,complete,area,billable,sum};}
-function makeDesktopRow(i){const idx=i-1;const tr=document.createElement('tr');tr.innerHTML=`<td class="num">${i}</td><td><input class="cell width" data-i="${idx}" data-k="w" inputmode="decimal" autocomplete="off"></td><td><input class="cell length" data-i="${idx}" data-k="l" inputmode="decimal" autocomplete="off"></td><td><input class="cell readonly area" data-i="${idx}" readonly tabindex="-1"></td><td><input class="cell price" data-i="${idx}" data-k="p" inputmode="decimal" autocomplete="off"></td><td><input class="cell readonly money sum" data-i="${idx}" readonly tabindex="-1"></td><td class="del-cell"><button type="button" class="small-btn icon-del" onclick="deleteRow(${idx})">×</button></td>`;return tr;}
+function makeDesktopRow(i){const idx=i-1;const tr=document.createElement('tr');tr.innerHTML=`<td class="num">${i}</td><td><input class="cell width" data-i="${idx}" data-k="w" inputmode="decimal" autocomplete="off"></td><td><input class="cell length" data-i="${idx}" data-k="l" inputmode="decimal" autocomplete="off"></td><td><input class="cell readonly area" data-i="${idx}" readonly tabindex="-1" style="opacity:1;-webkit-text-fill-color:#111827;color:#111827;"></td><td><input class="cell price" data-i="${idx}" data-k="p" inputmode="decimal" autocomplete="off"></td><td><input class="cell readonly money sum" data-i="${idx}" readonly tabindex="-1" style="opacity:1;-webkit-text-fill-color:#111827;color:#111827;"></td><td class="del-cell"><button type="button" class="small-btn icon-del" onclick="deleteRow(${idx})">×</button></td>`;return tr;}
 function makeMobileCard(i){const idx=i-1;const div=document.createElement('div');div.className='item';div.innerHTML=`<div class="item-head"><div class="item-num">Изделие №${i}</div><div style="display:flex;gap:8px;align-items:center"><div class="mini-sum"><span class="sum" data-i="${idx}"></span><span class="sum-unit" data-i="${idx}"></span></div><button type="button" class="small-btn icon-del" onclick="deleteRow(${idx})">×</button></div></div><div class="fields"><div><label>Ширина, см</label><input data-i="${idx}" data-k="w" inputmode="decimal" autocomplete="off"></div><div><label>Длина, см</label><input data-i="${idx}" data-k="l" inputmode="decimal" autocomplete="off"></div><div class="price-wrap"><label>Цена/м²</label><input data-i="${idx}" data-k="p" inputmode="decimal" autocomplete="off"></div></div><div class="calc"><div class="calcbox"><div class="label">Квадратура</div><div class="value"><span class="area" data-i="${idx}"></span><span class="area-unit" data-i="${idx}"></span></div></div><div class="calcbox"><div class="label">К расчету</div><div class="value"><span class="billable" data-i="${idx}">0.00</span> м²</div></div></div>`;return div;}
 function renderRows(){const tbody=$('calcTable').querySelector('tbody');const items=$('items');tbody.innerHTML='';items.innerHTML='';state.rows.forEach((_,idx)=>{tbody.appendChild(makeDesktopRow(idx+1));items.appendChild(makeMobileCard(idx+1));});syncInputs();recalc();}
 function syncInputs(){document.querySelectorAll('input[data-i][data-k]').forEach(inp=>{const r=state.rows[+inp.dataset.i];if(!r)return;const v=r[inp.dataset.k]||'';if(inp.value!==v)inp.value=v;});}
